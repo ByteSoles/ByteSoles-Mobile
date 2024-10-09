@@ -39,7 +39,7 @@
         * Menambahkan produk ke keranjang
         * Mengubah jumlah produk yang berada di keranjang
         * Setelah *checkout*, produk yang dibeli dihapus dari keranjang
-6. Review dan Rating Produk
+6. **Review dan Rating Produk**
     * *User* dapat memberikan ulasan dan rating pada produk yang telah dibeli untuk membantu pelanggan lain dalam membuat keputusan
 
 ## Dataset
