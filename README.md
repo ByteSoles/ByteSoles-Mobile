@@ -6,7 +6,7 @@
 * 2306245756 - Tarissa Mutia Andini
 * 2306245680 - Rajendra Rifqi Baskara
 
-## About ByteSoul
+## About ByteSoles
 &emsp;Kami memperkenalkan ByteSoles sebuah platform e-commerce inovatif yang khusus menyediakan berbagai sepatu sneakers dari merek-merek ternama seperti Adidas, Nike, Puma, dan Vans. Berawal dari pengamatan kami sebagai mahasiswa terhadap tren fashion di Jakarta, kami melihat minat yang tinggi terhadap sneakers sebagai bagian dari gaya hidup urban. Sayangnya, banyak konsumen yang tertipu dengan harga murah oleh penjual di media sosial yang mengklaim produk mereka asli, sering menggunakan istilah seperti "barang bal" atau "barang reject pabrik," padahal keaslian produk tersebut tidak terjamin. Melalui ByteSoles Jakarta, kami berinisiatif untuk menghubungkan konsumen langsung dengan produk asli dari distributor resmi, memberikan kemudahan akses dan pilihan produk yang beragam.
 
 &emsp;Mengapa berbelanja di Jakarta melalui ByteSoles Jakarta? Jakarta, sebagai ibu kota dan pusat bisnis Indonesia, menawarkan berbagai keuntungan unik. Kota ini sering menjadi tempat peluncuran pertama produk-produk terbaru dari merek-merek internasional, sehingga pelanggan mendapatkan akses lebih cepat ke koleksi terbaru dan edisi terbatas. Pengiriman dalam kota lebih cepat dan efisien dengan biaya lebih rendah, layanan jual lebih mudah, dan adanya event serta promosi lokal yang eksklusif bagi komunitas sneakers di Jakarta. Dengan maraknya penipuan online, ByteSoles Jakarta memberikan solusi dengan menjamin keaslian setiap produk, sehingga konsumen tidak perlu khawatir tertipu oleh penawaran yang tidak jelas di media sosial.
