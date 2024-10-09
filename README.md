@@ -6,6 +6,9 @@
 * 2306245756 - Tarissa Mutia Andini
 * 2306245680 - Rajendra Rifqi Baskara
 
+### Deployment Link:
+&emsp;http://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id
+
 ## About ByteSoles
 &emsp;Kami memperkenalkan ByteSoles sebuah platform e-commerce inovatif yang khusus menyediakan berbagai sepatu sneakers dari merek-merek ternama seperti Adidas, Nike, Puma, dan Vans. Berawal dari pengamatan kami sebagai mahasiswa terhadap tren fashion di Jakarta, kami melihat minat yang tinggi terhadap sneakers sebagai bagian dari gaya hidup urban. Sayangnya, banyak konsumen yang tertipu dengan harga murah oleh penjual di media sosial yang mengklaim produk mereka asli, sering menggunakan istilah seperti "barang bal" atau "barang reject pabrik," padahal keaslian produk tersebut tidak terjamin. Melalui ByteSoles Jakarta, kami berinisiatif untuk menghubungkan konsumen langsung dengan produk asli dari distributor resmi, memberikan kemudahan akses dan pilihan produk yang beragam.
 
