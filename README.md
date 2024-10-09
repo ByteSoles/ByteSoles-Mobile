@@ -13,7 +13,7 @@
 
 &emsp;Kebermanfaatan aplikasi ini meliputi kemudahan akses bagi pengguna untuk berbelanja kapan saja dan di mana saja, jaminan keaslian produk melalui kerja sama dengan distributor resmi, serta transaksi yang aman dan mudah. Dengan layanan pelanggan yang responsif dan komunitas sneakers yang aktif, ByteSoles Jakarta tidak hanya menyediakan platform belanja yang terpercaya dan user-friendly, tetapi juga berkontribusi positif bagi komunitas pecinta sneakers di Jakarta. Kami bertujuan untuk melindungi konsumen dari praktik penipuan dan ketidakpastian yang sering terjadi di platform media sosial, dengan menyediakan sumber terpercaya untuk kebutuhan sneakers Anda.
 
-## Moduls
+## Modules
 1. **Registrasi dan Autentikasi Pengguna**  (TIDAK DIHITUNG)
     * Registrasi akun baru
     * *Login*
