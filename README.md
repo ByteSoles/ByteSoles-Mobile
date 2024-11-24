@@ -34,6 +34,7 @@ Admin          | Admin memiliki akses penuh untuk mengelola produk, termasuk men
 
 #### 🔍 Detail produk
 **Dikerjakan oleh Tarissa Mutia Andini**
+
 Pada fitur ini, user dapat melihat deskripsi produk. User dapat melihat tombol untuk menambahkan ke keranjang dan memasukkan ke wishlist mereka.
 
 Role           | Deskripsi Fitur
@@ -43,15 +44,17 @@ Login User     | Login User dapat melihat deskrip barang atau produk yang ada di
 
 #### 🛒 Keranjang Belanja
 **Dikerjakan oleh Farhan Adelio Prayata**
+
 Pada fitur ini, user dapat menyimpan produk yang ingin dibeli. Didalam fitur ini, user dapat mengatur `quantity` produk dan dapat *checkout*/membeli untuk melanjutkan ke proses pembayaran.
 
 Role           | Deskripsi Fitur
 ---------------|------------------------------------------------------------------------------------------------------------
 Guest          | Guest tidak dapat mengakses fitur ini
-Login User     | Login User dapat mengakses fitur ini 
+Login User     | Login User dapat menambahkan produk yang ia minati ke keranjang.
 
 #### ⭐ Review n Rating 
 **Dikerjakan oleh  Daffa Aqil Mahmud**
+
 Pada fitur ini, user memberikan ulasan atau penilaian terhadap produk yang sudah di `checkout` atau dibeli oleh user. Fitur ini menampilkan ulasan dan rating ( dalam bentuk bintang, 1-5 )
 
 Role           | Deskripsi Fitur
@@ -62,6 +65,7 @@ Login User     | Login User dapat melakukan review terhadap produk yang sudah di
 
 #### 📃Wishlist
 **Dikerjakan oleh Yovan Raju**
+
 Pada fitur ini, user dapat memasukkan produk mereka kedalam wishlist mereka, agar mempermudah layanan user.
 Role           | Deskripsi Fitur
 ---------------|------------------------------------------------------------------------------------------------------------
@@ -69,12 +73,14 @@ Guest          | Guestt tidak dapat mengakses fitur ini
 Login User     | Login User dapat menambahkan produk ke dalam wishlist mereka
 
 #### 👤Profil Pengguna
+**Dikerjakan oleh Yovan Raju**
+
 Pada fitur ini, disediakan detail profil user. Seperti, nama lengkap, alamat, email, dan lainnya.
 
 Role           | Deskripsi Fitur
 ---------------|------------------------------------------------------------------------------------------------------------
 Guest          | Guest tidak dapat mengakses fitur ini
-Login User     | Login User dapat menambahakn detail profil mereka
+Login User     | Login User dapat menambahkan detail profil mereka
 
 ### Daftar Peran Pengguna
 
