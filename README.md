@@ -1,4 +1,5 @@
-Anggota kelompok C13:
+## *Stories, style, and sporting goods at ByteSoles*
+### 👥Anggota kelompok C13👥
 - 2306240162 - Farhan Adelio Prayata
 - 2306275512 - Yovan Raju
 - 2306245056 - Daffa Aqil Mahmud
@@ -15,23 +16,36 @@ Kami memperkenalkan ByteSoles sebuah platform Mobile inovatif yang khusus menyed
 
 
 
-### Daftar Modul dan Pengembang
-📇 Katalog ( Explore )
+### 💻Daftar Modul dan Pengembang💻
+
+👟 Katalog ( Explore )
 **Dikerjakan oleh Rajendra Rifqi Baskara**
   
 Pada fitur ini, pengguna dapat menjelajahi berbagai produk sepatu yang tersedia di platform kami. Kami juga menyediakan fitur filter untuk membantu pengguna memilih produk berdasarkan kategori yang diinginkan serta fitur pengurutan (sorting) produk berdasarkan harga.
 
 Berikut aksi yang dapat dilakukan oleh masing-masing *role*:
-Role          : Deskripsi Fitur
-------------------------------------------------------------
-Guest         : Guest dapat melihat semua barang atau produk yang ada di platform, tetapi tidak dapat menambahkan atau menghapus produk.
-Login User    : Login User dapat melihat semua barang atau produk yang ada di platform, tetapi tidak dapat menambahkan atau menghapus produk.
-Admin         : Admin memiliki akses penuh untuk mengelola produk, termasuk menambahkan produk baru, mengurangi stok, atau menghapus produk dari platform.
+
+Role           | Deskripsi Fitur
+---------------|------------------------------------------------------------------------------------------------------------
+Guest          | Guest dapat melihat semua barang atau produk yang ada di platform, tetapi tidak dapat menambahkan atau menghapus produk.
+Login User     | Login User dapat melihat semua barang atau produk yang ada di platform, tetapi tidak dapat menambahkan atau menghapus produk.
+Admin          | Admin memiliki akses penuh untuk mengelola produk, termasuk menambahkan produk baru dan menghapus produk dari platform.
 
 
 ### Daftar Peran Pengguna
 
+- Guest 🛍️ 
+- User 👤 
+- Admin 🛠️ 
+
 
 ### Alur Pengintegrasian dengan Aplikasi Web
+
+1. Tambahkan package/library `http` ke proyek agar aplikasi dapat berinteraksi dengan web service.
+2. Gunakan autentikasi login, logout, dan registrasi untuk memberikan otorisasi user sesuai peran (reader atau writer). Gunakan pbp_django_auth untuk mengelola cookie agar setiap request ke server terautentikasi.
+3. Fetch data `JSON` dari web service menggunakan Uri.parse untuk membangun URL dan metode GET dengan tipe `application/json.`
+4. Decode data `JSON` dengan `jsonDecode()` dan ubah menjadi objek model menggunakan generator seperti *Quicktype.* (https://app.quicktype.io/)
+5. Tampilkan data secara asynchronous di aplikasi Flutter dengan *FutureBuilder*.
+6. Gunakan data `JSON` untuk mendukung operasi CRUD secara async pada aplikasi mobile dan web.
 
 ### Referensi
