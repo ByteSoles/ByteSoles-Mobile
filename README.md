@@ -16,6 +16,17 @@ Kami memperkenalkan ByteSoles sebuah platform Mobile inovatif yang khusus menyed
 
 
 ### Daftar Modul dan Pengembang
+📇 Katalog ( Explore )
+**Dikerjakan oleh Rajendra Rifqi Baskara**
+  
+Pada fitur ini, pengguna dapat menjelajahi berbagai produk sepatu yang tersedia di platform kami. Kami juga menyediakan fitur filter untuk membantu pengguna memilih produk berdasarkan kategori yang diinginkan serta fitur pengurutan (sorting) produk berdasarkan harga.
+
+Berikut aksi yang dapat dilakukan oleh masing-masing *role*:
+Role          : Deskripsi Fitur
+------------------------------------------------------------
+Guest         : Guest dapat melihat semua barang atau produk yang ada di platform, tetapi tidak dapat menambahkan atau menghapus produk.
+Login User    : Login User dapat melihat semua barang atau produk yang ada di platform, tetapi tidak dapat menambahkan atau menghapus produk.
+Admin         : Admin memiliki akses penuh untuk mengelola produk, termasuk menambahkan produk baru, mengurangi stok, atau menghapus produk dari platform.
 
 
 ### Daftar Peran Pengguna
