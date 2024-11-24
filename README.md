@@ -18,7 +18,7 @@ Kami memperkenalkan ByteSoles sebuah platform Mobile inovatif yang khusus menyed
 
 ### 💻Daftar Modul dan Pengembang💻
 
-👟 Katalog ( Explore )
+#### 👟 Katalog ( Explore )
 **Dikerjakan oleh Rajendra Rifqi Baskara**
   
 Pada fitur ini, pengguna dapat menjelajahi berbagai produk sepatu yang tersedia di platform kami. Kami juga menyediakan fitur filter untuk membantu pengguna memilih produk berdasarkan kategori yang diinginkan serta fitur pengurutan (sorting) produk berdasarkan harga.
@@ -32,6 +32,50 @@ Login User     | Login User dapat melihat semua barang atau produk yang ada di p
 Admin          | Admin memiliki akses penuh untuk mengelola produk, termasuk menambahkan produk baru dan menghapus produk dari platform.
 
 
+#### 🔍 Detail produk
+**Dikerjakan oleh Tarissa Mutia Andini**
+Pada fitur ini, user dapat melihat deskripsi produk. User dapat melihat tombol untuk menambahkan ke keranjang dan memasukkan ke wishlist mereka.
+
+Role           | Deskripsi Fitur
+---------------|------------------------------------------------------------------------------------------------------------
+Guest          | Guest tidak dapat melihat deskripsi barang atau produk yang ada di platform.
+Login User     | Login User dapat melihat deskrip barang atau produk yang ada di platform dan dapat menambahkan atau menghapus produk.
+
+#### 🛒 Keranjang Belanja
+**Dikerjakan oleh Farhan Adelio Prayata**
+Pada fitur ini, user dapat menyimpan produk yang ingin dibeli. Didalam fitur ini, user dapat mengatur `quantity` produk dan dapat *checkout*/membeli untuk melanjutkan ke proses pembayaran.
+
+Role           | Deskripsi Fitur
+---------------|------------------------------------------------------------------------------------------------------------
+Guest          | Guest tidak dapat mengakses fitur ini
+Login User     | Login User dapat mengakses fitur ini 
+
+#### ⭐ Review n Rating 
+**Dikerjakan oleh  Daffa Aqil Mahmud**
+Pada fitur ini, user memberikan ulasan atau penilaian terhadap produk yang sudah di `checkout` atau dibeli oleh user. Fitur ini menampilkan ulasan dan rating ( dalam bentuk bintang, 1-5 )
+
+Role           | Deskripsi Fitur
+---------------|------------------------------------------------------------------------------------------------------------
+Guest          | Guest tidak dapat mengakses fitur ini
+Login User     | Login User dapat melakukan review terhadap produk yang sudah dibeli oleh mereka
+
+
+#### 📃Wishlist
+**Dikerjakan oleh Yovan Raju**
+Pada fitur ini, user dapat memasukkan produk mereka kedalam wishlist mereka, agar mempermudah layanan user.
+Role           | Deskripsi Fitur
+---------------|------------------------------------------------------------------------------------------------------------
+Guest          | Guestt tidak dapat mengakses fitur ini
+Login User     | Login User dapat menambahkan produk ke dalam wishlist mereka
+
+#### 👤Profil Pengguna
+Pada fitur ini, disediakan detail profil user. Seperti, nama lengkap, alamat, email, dan lainnya.
+
+Role           | Deskripsi Fitur
+---------------|------------------------------------------------------------------------------------------------------------
+Guest          | Guest tidak dapat mengakses fitur ini
+Login User     | Login User dapat menambahakn detail profil mereka
+
 ### Daftar Peran Pengguna
 
 - Guest 🛍️ 
@@ -42,10 +86,9 @@ Admin          | Admin memiliki akses penuh untuk mengelola produk, termasuk men
 ### Alur Pengintegrasian dengan Aplikasi Web
 
 1. Tambahkan package/library `http` ke proyek agar aplikasi dapat berinteraksi dengan web service.
-2. Gunakan autentikasi login, logout, dan registrasi untuk memberikan otorisasi user sesuai peran (reader atau writer). Gunakan pbp_django_auth untuk mengelola cookie agar setiap request ke server terautentikasi.
+2. Gunakan autentikasi login, logout, dan registrasi untuk memberikan otorisasi user sesuai peran (reader atau writer). Gunakan `pbp_django_auth` untuk mengelola cookie agar setiap request ke server terautentikasi.
 3. Fetch data `JSON` dari web service menggunakan Uri.parse untuk membangun URL dan metode GET dengan tipe `application/json.`
 4. Decode data `JSON` dengan `jsonDecode()` dan ubah menjadi objek model menggunakan generator seperti *Quicktype.* (https://app.quicktype.io/)
 5. Tampilkan data secara asynchronous di aplikasi Flutter dengan *FutureBuilder*.
-6. Gunakan data `JSON` untuk mendukung operasi CRUD secara async pada aplikasi mobile dan web.
 
 ### Referensi
