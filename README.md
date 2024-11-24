@@ -91,4 +91,3 @@ Login User     | Login User dapat menambahakn detail profil mereka
 4. Decode data `JSON` dengan `jsonDecode()` dan ubah menjadi objek model menggunakan generator seperti *Quicktype.* (https://app.quicktype.io/)
 5. Tampilkan data secara asynchronous di aplikasi Flutter dengan *FutureBuilder*.
 
-### Referensi
