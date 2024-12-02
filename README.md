@@ -103,4 +103,4 @@ Login User     | Login User dapat menambahkan detail profil mereka
 5. Tampilkan data secara asynchronous di aplikasi Flutter dengan *FutureBuilder*.
 
 ### LINK DESAIN MOBILE APP 
-https://www.figma.com/design/sgLjXBVX3kB6RvRWW7lSgg/eCommerce-App-UI-Kit---Case-Study-Ecommerce-Mobile-App-UI-kit-(Community)?node-id=1-16990&t=v7Xr1pUFSLMqolre-1
+https://www.figma.com/design/jwNoTGrUjSStACHvPhmYV7/Design-Model-ByteSoles?node-id=0-1&node-type=canvas&t=uaHmrqcY6pHudFaw-0
