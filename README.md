@@ -2,7 +2,7 @@ Anggota kelompok C13:
 =======
 ## *Stories, style, and sporting goods at ByteSoles*
 ### 👥Anggota kelompok C13👥
->>>>>>> baa62825a04498a7cf872969cb7bc9a7de05e227
+
 - 2306240162 - Farhan Adelio Prayata
 - 2306275512 - Yovan Raju
 - 2306245056 - Daffa Aqil Mahmud

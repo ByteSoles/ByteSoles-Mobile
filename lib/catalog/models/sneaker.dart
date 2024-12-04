@@ -1,25 +1,25 @@
 // To parse this JSON data, do
 //
-//     final product = productFromJson(jsonString);
+//     final sneaker = sneakerFromJson(jsonString);
 
 import 'dart:convert';
 
-List<Product> productFromJson(String str) => List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
+List<Sneaker> sneakerFromJson(String str) => List<Sneaker>.from(json.decode(str).map((x) => Sneaker.fromJson(x)));
 
-String productToJson(List<Product> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String sneakerToJson(List<Sneaker> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Product {
+class Sneaker {
     String model;
     int pk;
     Fields fields;
 
-    Product({
+    Sneaker({
         required this.model,
         required this.pk,
         required this.fields,
     });
 
-    factory Product.fromJson(Map<String, dynamic> json) => Product(
+    factory Sneaker.fromJson(Map<String, dynamic> json) => Sneaker(
         model: json["model"],
         pk: json["pk"],
         fields: Fields.fromJson(json["fields"]),
