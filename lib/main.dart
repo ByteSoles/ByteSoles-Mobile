@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'keranjang/screens/keranjang.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -32,6 +33,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        '/': (context) => const HomePage(), // halaman utama
+        '/keranjang': (context) => const KeranjangPage(),
+        // ... route lainnya
+      },
     );
   }
 }
@@ -120,6 +126,23 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Keranjang',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.pushNamed(context, '/keranjang');
+          }
+        },
+      ),
     );
   }
 }
