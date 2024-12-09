@@ -9,9 +9,18 @@ class CartService {
         sneakerId: "1",
         sneakerName: "Nike Air Max",
         sneakerPrice: 150,
-        sneakerImage: "https://example.com/nike.jpg",
+        sneakerImage: "assets/img/empty.png",
         quantity: 2,
-        totalPrice: 300,
+        totalPrice:500,
+      ),
+      CartItem(
+        userId: "1",
+        sneakerId: "1",
+        sneakerName: "Nike Air Max",
+        sneakerPrice: 150,
+        sneakerImage: "assets/img/empty.png",
+        quantity: 2,
+        totalPrice:500,
       ),
     ];
   }
