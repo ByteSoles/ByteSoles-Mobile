@@ -1,7 +1,6 @@
+import 'package:bytesoles/keranjang/models/cart_models.dart';
+import 'package:bytesoles/keranjang/widgets/cart_item_card.dart';
 import 'package:flutter/material.dart';
-import 'bytesoles/models/test.dart';
-import 'bytesoles/widgets/cart_item_card.dart';
-import 'bytesoles/widgets/order_summary.dart';
 
 class CartContent extends StatelessWidget {
   final List<CartItem> cartItems;
@@ -42,7 +41,7 @@ class CartContent extends StatelessWidget {
             },
           ),
           const SizedBox(height: 20),
-          OrderSummary(userCart: userCart),
+          // OrderSummary(userCart: userCart),
         ],
       ),
     );

@@ -32,9 +32,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      //!! ubah kalo mau push
+      home: const KeranjangPage(),
       routes: {
-        '/': (context) => const HomePage(), // halaman utama
+        // '/': (context) => const HomePage(), // halaman utama
         '/keranjang': (context) => const KeranjangPage(),
         // ... route lainnya
       },

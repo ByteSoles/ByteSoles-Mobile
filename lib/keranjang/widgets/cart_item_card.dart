@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'bytesoles/models/test.dart';
-import 'bytesoles/services/cart_service.dart';
+import 'package:bytesoles/keranjang/models/cart_models.dart';
+import 'package:bytesoles/keranjang/services/cart_service.dart';
 
 class CartItemCard extends StatelessWidget {
   final CartItem item;
@@ -52,10 +52,10 @@ class CartItemCard extends StatelessWidget {
                             .toList(),
                         onChanged: (value) async {
                           if (value != null) {
-                            await CartService.updateQuantity(
-                              item.sneakerId,
-                              value,
-                            );
+                            // await CartService.updateQuantity(
+                            //   item.sneakerId,
+                            //   value,
+                            // );
                             onRefresh();
                           }
                         },
@@ -74,7 +74,7 @@ class CartItemCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () async {
-                    await CartService.removeItem(item.sneakerId);
+                    // await CartService.removeItem(item.sneakerId);
                     onRefresh();
                   },
                   child: const Text(
