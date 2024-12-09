@@ -4,38 +4,71 @@ import 'package:bytesoles/catalog/models/sneaker.dart';
 class SneakerCard extends StatelessWidget {
   final Sneaker sneaker;
 
-  const SneakerCard({super.key, required this.sneaker});
+  const SneakerCard({Key? key, required this.sneaker}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Gambar URL dari API
+    final String imageUrl = sneaker.fields.image;
+
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Name: ${sneaker.fields.name}',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text('Brand: ${sneaker.fields.brand}'),
-            Text('Price: \$${sneaker.fields.price}'),
-            Text('Release Date: ${sneaker.fields.releaseDate}'),
-            Image.network(
-              sneaker.fields.image,
-              height: 200,
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Column(
+        children: [
+          // Menampilkan gambar sneaker
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            child: Image.network(
+              imageUrl,
+              height: 220,
               width: double.infinity,
               fit: BoxFit.cover,
             ),
-            const SizedBox(height: 8),
-            Text('Slug: ${sneaker.fields.slug}'),
-          ],
-        ),
+          ),
+          // Menampilkan informasi sneaker menggunakan Flex dan Expanded
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Nama sneaker dengan font bold
+                Text(
+                  sneaker.fields.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+                // Brand sneaker
+                Text(
+                  sneaker.fields.brand,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Harga sneaker
+                Text(
+                  '\$${sneaker.fields.price}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Tanggal rilis sneaker
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
