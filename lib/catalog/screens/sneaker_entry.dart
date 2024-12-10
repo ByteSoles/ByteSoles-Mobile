@@ -13,8 +13,11 @@ class SneakerEntry extends StatefulWidget {
 
 class _SneakerEntryState extends State<SneakerEntry> {
   Future<List<Sneaker>> fetchSneakers(CookieRequest request) async {
-    // Ganti URL dengan endpoint API yang benar
-    final response = await request.get('http://127.0.0.1:8000/catalog/view-json/');
+    // Replace 10.0.2.2 with your computer's IP address when testing on a physical device
+    // 10.0.2.2 is the special alias to your host machine when using Android emulator
+    final response =
+        //await request.get('http://192.168.1.100.7:8000/catalog/view-json/');
+        await request.get('http://10.0.2.2:8000/catalog/view-json/');
 
     // Melakukan decode response menjadi bentuk json
     var data = response;
@@ -56,14 +59,14 @@ class _SneakerEntryState extends State<SneakerEntry> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount( 
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 8.0,
                   mainAxisSpacing: 8.0,
                   childAspectRatio: 0.75,
                 ),
                 itemCount: snapshot.data!.length,
-                itemBuilder: (_,index){
+                itemBuilder: (_, index) {
                   final sneaker = snapshot.data![index];
                   return SneakerCard(sneaker: sneaker);
                 },
