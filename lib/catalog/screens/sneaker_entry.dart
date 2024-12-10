@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:bytesoles/catalog/models/sneaker.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:bytesoles/catalog/widgets/sneaker_card.dart'; // Impor SneakerCard
+import 'package:bytesoles/catalog/widgets/recently_viewed.dart'; // Updated import path
 
 class SneakerEntry extends StatefulWidget {
   const SneakerEntry({super.key});
@@ -16,8 +17,8 @@ class _SneakerEntryState extends State<SneakerEntry> {
     // Replace 10.0.2.2 with your computer's IP address when testing on a physical device
     // 10.0.2.2 is the special alias to your host machine when using Android emulator
     final response =
-        //await request.get('http://192.168.1.100.7:8000/catalog/view-json/');
-        await request.get('http://10.0.2.2:8000/catalog/view-json/');
+        await request.get('http://127.0.0.1:8000/catalog/view-json/');
+        //await request.get('http://10.0.2.2:8000/catalog/view-json/');
 
     // Melakukan decode response menjadi bentuk json
     var data = response;
