@@ -5,6 +5,7 @@ import 'routes/app_routes.dart';
 import 'screens/homepage.dart';
 import 'screens/login.dart';
 import 'screens/register.dart';
+import 'userprofile/screens/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.home: (context) => const HomePage(),
           AppRoutes.login: (context) => const LoginPage(),
           AppRoutes.register: (context) => const RegisterPage(),
+          AppRoutes.profile: (context) => const ProfileScreen(),
           // Tambahkan route lainnya jika diperlukan
         },
       ),

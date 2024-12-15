@@ -7,6 +7,7 @@ import '../app_utils.dart' show ImageConstant;
 import '../routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:bytesoles/userprofile/screens/profile_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -131,8 +132,9 @@ class _HomePageState extends State<HomePage> {
           child: isLoggedIn
               ? InkWell(
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Profile page coming soon!')),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ProfileScreen()),
                     );
                   },
                   child: ClipRRect(
