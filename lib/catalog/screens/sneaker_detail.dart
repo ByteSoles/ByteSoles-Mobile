@@ -29,7 +29,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
 
   Future<Sneaker> fetchSneaker(int id) async {
     final request = context.read<CookieRequest>();
-    final response = await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
+    final response =
+        await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
     return Sneaker.fromJson(response);
   }
 
@@ -37,19 +38,50 @@ class _SneakerDetailState extends State<SneakerDetail> {
     final request = context.read<CookieRequest>();
     final recentIds = await RecentlyViewedManager.getItems();
     List<Sneaker> sneakers = [];
-    
+
     // Remove current sneaker from the list
     recentIds.remove(widget.sneakerId);
-    
+
     for (var id in recentIds) {
       try {
-        final response = await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
+        final response =
+            await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
         sneakers.add(Sneaker.fromJson(response));
       } catch (e) {
         print('Error fetching sneaker $id: $e');
       }
     }
     return sneakers;
+  }
+
+  Future<void> clearRecentlyViewed() async {
+    bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Clear Recently Viewed'),
+          content: const Text(
+              'Are you sure you want to clear all recently viewed items?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      await RecentlyViewedManager.clearItems();
+      setState(() {
+        futureRecentlyViewed = fetchRecentlyViewed();
+      });
+    }
   }
 
   @override
@@ -70,7 +102,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData) {
-                  return const Center(child: Text('No sneaker details available.'));
+                  return const Center(
+                      child: Text('No sneaker details available.'));
                 } else {
                   Sneaker sneaker = snapshot.data!;
                   return Padding(
@@ -82,7 +115,9 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           // Product Image
                           LayoutBuilder(
                             builder: (context, constraints) {
-                              double imageWidth = constraints.maxWidth > 600 ? 400 : constraints.maxWidth;
+                              double imageWidth = constraints.maxWidth > 600
+                                  ? 400
+                                  : constraints.maxWidth;
                               double imageHeight = imageWidth * 0.75;
 
                               return Center(
@@ -104,8 +139,11 @@ class _SneakerDetailState extends State<SneakerDetail> {
                                       width: imageWidth,
                                       height: imageHeight,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                        return const Icon(Icons.error, color: Colors.red, size: 50);
+                                      errorBuilder: (BuildContext context,
+                                          Object exception,
+                                          StackTrace? stackTrace) {
+                                        return const Icon(Icons.error,
+                                            color: Colors.red, size: 50);
                                       },
                                     ),
                                   ),
@@ -117,17 +155,20 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           // Product Information
                           Text(
                             sneaker.fields.name,
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
                           Text(
                             sneaker.fields.brand,
-                            style: const TextStyle(fontSize: 16, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.grey),
                           ),
                           const SizedBox(height: 10),
                           Text(
                             '\$${sneaker.fields.price}',
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 20),
                           // Release Date
@@ -140,10 +181,12 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           DropdownButtonFormField<String>(
                             decoration: InputDecoration(
                               labelText: 'Select Shoe Size',
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8)),
                             ),
                             items: ['38', '39', '40', '41', '42', '43', '44']
-                                .map((size) => DropdownMenuItem(value: size, child: Text('Size $size')))
+                                .map((size) => DropdownMenuItem(
+                                    value: size, child: Text('Size $size')))
                                 .toList(),
                             onChanged: (value) {},
                           ),
@@ -157,7 +200,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                               backgroundColor: Colors.black,
                               foregroundColor: Colors.white,
                               minimumSize: const Size.fromHeight(50),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -170,7 +214,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                               backgroundColor: Colors.black,
                               foregroundColor: Colors.white,
                               minimumSize: const Size.fromHeight(50),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -183,7 +228,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                               backgroundColor: Colors.black,
                               foregroundColor: Colors.white,
                               minimumSize: const Size.fromHeight(50),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
                             ),
                           ),
                         ],
@@ -193,12 +239,12 @@ class _SneakerDetailState extends State<SneakerDetail> {
                 }
               },
             ),
-            
+
             // Recently Viewed Section
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Recently Viewed',
@@ -207,93 +253,99 @@ class _SneakerDetailState extends State<SneakerDetail> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 200, // Adjust height as needed
-                    child: FutureBuilder<List<Sneaker>>(
-                      future: futureRecentlyViewed,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
-                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return const Center(child: Text('No recently viewed items'));
-                        }
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: clearRecentlyViewed,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 200,
+              child: FutureBuilder<List<Sneaker>>(
+                future: futureRecentlyViewed,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                        child: Text('No recently viewed items'));
+                  }
 
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            final sneaker = snapshot.data![index];
-                            return Card(
-                              margin: const EdgeInsets.only(right: 16),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SneakerDetail(
-                                        sneakerId: sneaker.pk,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: SizedBox(
-                                  width: 160,
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final sneaker = snapshot.data![index];
+                      return Card(
+                        margin: const EdgeInsets.only(right: 16),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SneakerDetail(
+                                  sneakerId: sneaker.pk,
+                                ),
+                              ),
+                            );
+                          },
+                          child: SizedBox(
+                            width: 160,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(4),
+                                  ),
+                                  child: Image.network(
+                                    sneaker.fields.image,
+                                    height: 120,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: const BorderRadius.vertical(
-                                          top: Radius.circular(4),
+                                      Text(
+                                        sneaker.fields.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        child: Image.network(
-                                          sneaker.fields.image,
-                                          height: 120,
-                                          width: double.infinity,
-                                          fit: BoxFit.cover,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        sneaker.fields.brand,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              sneaker.fields.name,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Text(
-                                              sneaker.fields.brand,
-                                              style: const TextStyle(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            Text(
-                                              '\$${sneaker.fields.price}',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
+                                      Text(
+                                        '\$${sneaker.fields.price}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ],
