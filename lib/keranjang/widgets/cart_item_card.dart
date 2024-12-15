@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:bytesoles/keranjang/models/cart_models.dart';
-import 'package:bytesoles/keranjang/services/cart_service.dart';
 
 class CartItemCard extends StatelessWidget {
   final CartItem item;
@@ -12,13 +12,47 @@ class CartItemCard extends StatelessWidget {
     required this.onRefresh,
   }) : super(key: key);
 
+  Future<void> updateQuantity(String sneakerId, int quantity) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:8000/keranjang/update-quantity/'),
+        body: {
+          'sneaker': sneakerId,
+          'quantity': quantity.toString(),
+        },
+      );
+      if (response.statusCode == 200) {
+        onRefresh();
+      }
+    } catch (e) {
+      print('Error updating quantity: $e');
+    }
+  }
+
+  Future<void> removeItem(String sneakerId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:8000/keranjang/remove/'),
+        body: {
+          'sneaker': sneakerId,
+        },
+      );
+      if (response.statusCode == 200) {
+        onRefresh();
+      }
+    } catch (e) {
+      print('Error removing item: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(
               item.sneakerImage,
@@ -34,10 +68,11 @@ class CartItemCard extends StatelessWidget {
                   Text(
                     item.sneakerName,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
                       fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 8),
                   Text('\$${item.sneakerPrice}'),
                   Row(
                     children: [
@@ -52,11 +87,7 @@ class CartItemCard extends StatelessWidget {
                             .toList(),
                         onChanged: (value) async {
                           if (value != null) {
-                            // await CartService.updateQuantity(
-                            //   item.sneakerId,
-                            //   value,
-                            // );
-                            onRefresh();
+                            await updateQuantity(item.sneakerId, value);
                           }
                         },
                       ),
@@ -69,13 +100,12 @@ class CartItemCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'Total: \$${item.totalPrice}',
+                  '\$${item.totalPrice}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 TextButton(
                   onPressed: () async {
-                    // await CartService.removeItem(item.sneakerId);
-                    onRefresh();
+                    await removeItem(item.sneakerId);
                   },
                   child: const Text(
                     'Remove',

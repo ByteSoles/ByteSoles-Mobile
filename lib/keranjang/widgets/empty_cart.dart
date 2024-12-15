@@ -12,31 +12,20 @@ class EmptyCart extends StatelessWidget {
           const Text(
             'YOUR BAG IS EMPTY',
             style: TextStyle(
-              fontSize: 28,
+              fontSize: 32,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 20),
-          Image.asset(
-            'assets/img/empty.png',
-            width: 160,
-          ),
+          Image.asset('assets/img/empty.png', width: 160),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/homepage');
-            },
+            onPressed: () => Navigator.pushNamed(context, '/'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
-            child: const Text(
-              'GET STARTED →',
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text('GET STARTED →'),
           ),
         ],
       ),
