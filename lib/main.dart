@@ -6,6 +6,7 @@ import 'screens/homepage.dart';
 import 'screens/login.dart';
 import 'screens/register.dart';
 import 'userprofile/screens/profile_screen.dart';
+import 'package:bytesoles/catalog/screens/sneaker_entry.dart'; // Ganti dengan path file `SneakerEntry` Anda
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.login: (context) => const LoginPage(),
           AppRoutes.register: (context) => const RegisterPage(),
           AppRoutes.profile: (context) => const ProfileScreen(),
+          AppRoutes.catalogProductsScreen: (context) => const SneakerEntry(),
           // Tambahkan route lainnya jika diperlukan
         },
       ),
