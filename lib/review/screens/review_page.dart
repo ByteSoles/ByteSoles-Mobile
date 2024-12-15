@@ -1,4 +1,4 @@
-import 'package:bytesoles/review/widgets/navigation_bar.dart';
+import 'package:bytesoles/review/widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:bytesoles/review/widgets/shoe_card.dart';
 import 'package:bytesoles/review/widgets/review_list.dart';
@@ -45,7 +45,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   ),
                   ShoeCard(),
                   SizedBox(height: 25),
-                  ReviewList(),
+                  ReviewList('jordan-1-retro-high-og-patent-bred-jordan'),
                 ]
               )
             )

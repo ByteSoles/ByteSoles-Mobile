@@ -5,7 +5,9 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
 class ReviewList extends StatefulWidget {
-  const ReviewList({super.key});
+  final String slug;
+
+  const ReviewList(this.slug);
 
   @override
   State<ReviewList> createState() => _ReviewListState();
@@ -13,12 +15,9 @@ class ReviewList extends StatefulWidget {
 
 class _ReviewListState extends State<ReviewList> {
   Future<List<ReviewEntry>> fetchMood(CookieRequest request) async {
-    final reviews = await request.get('http://127.0.0.1:8000/review/json/jordan-1-retro-high-og-patent-bred-jordan/');
-    
-    // Melakukan decode response menjadi bentuk json
+    final reviews = await request.get('http://127.0.0.1:8000/review/json/${widget.slug}/');
     var data = reviews;
     
-    // Melakukan konversi data json menjadi object ReviewEntry
     List<ReviewEntry> listReview = [];
     for (var d in data) {
       if (d != null) {

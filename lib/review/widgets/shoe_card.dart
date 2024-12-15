@@ -76,7 +76,7 @@ class ShoeCard extends StatelessWidget {
                     ),
                     SizedBox(height: screenWidth * 0.015),
                     Container(
-                      width: screenWidth >= 1200 ? screenWidth * 0.23 : 1100 * 0.25,
+                      width: screenWidth >= 1200 ? screenWidth * 0.25 : screenWidth > 1000 ? 1000 * 0.3 : screenWidth * 0.3,
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () {},
@@ -87,9 +87,9 @@ class ShoeCard extends StatelessWidget {
                           backgroundColor: Colors.black,
                         ),
                         child: Text(
-                          screenWidth.toString(),
+                          "Add Review",
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: screenWidth > 800 ? 17 : 14,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
