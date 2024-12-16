@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bytesoles/keranjang/models/cart_models.dart';
+import 'package:bytesoles/keranjang/models/cart_item.dart';
 
 class PurchaseHistory extends StatelessWidget {
   final List<CartItem> items;
@@ -57,7 +57,7 @@ class PurchaseHistory extends StatelessWidget {
           Row(
             children: [
               Image.network(
-                item.sneakerImage,
+                item.fields.sneakerImage,
                 width: 64,
                 height: 64,
                 fit: BoxFit.cover,
@@ -68,18 +68,18 @@ class PurchaseHistory extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.sneakerName,
+                      item.fields.sneakerName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
-                    Text('Quantity: ${item.quantity}'),
+                    Text('Quantity: ${item.fields.quantity}'),
                   ],
                 ),
               ),
               Text(
-                '\$${item.totalPrice}',
+                '\$${item.fields.totalPrice}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,

@@ -1,5 +1,7 @@
+import 'package:bytesoles/keranjang/models/user_cart.dart';
+import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:bytesoles/keranjang/models/cart_models.dart';
+import 'package:bytesoles/keranjang/models/cart_item.dart';
 
 class OrderSummary extends StatelessWidget {
   final UserCart userCart;
@@ -31,8 +33,8 @@ class OrderSummary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${userCart.totalItems} Items'),
-              Text('\$${userCart.totalPrice}'),
+              Text('${userCart.pk.toInt()} Items'),
+              Text('\$${userCart.pk.toInt()}'),
             ],
           ),
           const SizedBox(height: 8),
@@ -52,7 +54,7 @@ class OrderSummary extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                '\$${userCart.totalPrice}',
+                '\$${userCart.pk.toInt()}',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
@@ -76,7 +78,13 @@ class OrderSummary extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // Handle checkout
+                // Pindah ke route keranjangPage
+                Navigator.pushNamed(context, AppRoutes.checkoutPage);
+
+                // Menampilkan snackbar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Cart page coming soon!')),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
@@ -85,6 +93,7 @@ class OrderSummary extends StatelessWidget {
               child: const Text('Checkout'),
             ),
           ),
+
         ],
       ),
     );

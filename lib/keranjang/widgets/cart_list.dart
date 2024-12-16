@@ -1,12 +1,13 @@
+import 'package:bytesoles/keranjang/models/user_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:bytesoles/keranjang/widgets/cart_item_card.dart';
 import 'package:bytesoles/keranjang/widgets/order_summary.dart';
-import 'package:bytesoles/keranjang/models/cart_models.dart';
+import 'package:bytesoles/keranjang/models/cart_item.dart';
 
 class CartList extends StatelessWidget {
   final List<CartItem> cartItems;
   final UserCart userCart;
-  final VoidCallback onRefresh;
+  final Future<void> onRefresh;
   final bool itemAdded;
 
   const CartList({

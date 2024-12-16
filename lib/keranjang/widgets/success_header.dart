@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bytesoles/keranjang/models/cart_models.dart';
+import 'package:bytesoles/keranjang/models/cart_item.dart';
 
 class SuccessHeader extends StatelessWidget {
   @override

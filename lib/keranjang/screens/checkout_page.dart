@@ -1,20 +1,43 @@
+import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
+import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:bytesoles/keranjang/widgets/success_header.dart';
 import 'package:bytesoles/keranjang/widgets/purchase_history.dart';
-import 'package:bytesoles/keranjang/models/cart_models.dart';
+import 'package:bytesoles/keranjang/models/cart_item.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class CheckoutSuccessPage extends StatelessWidget {
-  final List<CartItem> items;
-  final int totalPrice;
+  int totalPrice = 0;
+  List<CartItem> items = [];
 
-  const CheckoutSuccessPage({
-    Key? key,
-    required this.items,
-    required this.totalPrice,
-  }) : super(key: key);
+  CheckoutSuccessPage({
+    super.key,
+    // required this.items,
+    // required this.totalPrice,
+  });
+  Future<List<CartItem>> getCartItem (CookieRequest request) async {
+    List<CartItem> listCart = [];
+    try{
+      final response = await request.get("http://localhost:8000/keranjang/json/");
+      for(var d in response){
+        if(d != null){
+          listCart.add(CartItem.fromJson(d));
+        }
+      }
+    }catch(e){
+
+    }
+    return listCart;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
+    List<CartItem> items = [];
+    int totalPrice;
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -90,7 +113,7 @@ class CheckoutSuccessPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          ...items.map((item) => _buildPurchaseItem(item)).toList(),
+          // items.map((item) => _buildPurchaseItem(item)).toList(),
           Divider(),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -131,7 +154,7 @@ class CheckoutSuccessPage extends StatelessWidget {
           Row(
             children: [
               Image.network(
-                item.sneakerImage,
+                item.fields.sneakerImage,
                 width: 64,
                 height: 64,
                 fit: BoxFit.cover,
@@ -142,18 +165,18 @@ class CheckoutSuccessPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.sneakerName,
+                      item.fields.sneakerName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
-                    Text('Quantity: ${item.quantity}'),
+                    Text('Quantity: ${item.fields.quantity}'),
                   ],
                 ),
               ),
               Text(
-                '\$${item.totalPrice}',
+                '\$${item.fields.totalPrice}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -178,13 +201,14 @@ class CheckoutSuccessPage extends StatelessWidget {
   }
 
   Widget _buildReturnButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => Navigator.pushReplacementNamed(context, '/'),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-      ),
-      child: const Text('Return to Homepage'),
-    );
-  }
+  return ElevatedButton(
+    onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.home),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.green,
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+    ),
+    child: const Text('Return to Homepage'),
+  );
+}
+
 }
