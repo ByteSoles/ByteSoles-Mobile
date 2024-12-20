@@ -8,6 +8,8 @@ import 'package:bytesoles/keranjang/widgets/cart_list.dart';
 import 'package:bytesoles/keranjang/models/cart_item.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:bytesoles/keranjang/models/cart_item.dart' as CartItemModel;
+import 'package:bytesoles/keranjang/models/user_cart.dart' as UserCartModel;
 
 class KeranjangPage extends StatefulWidget {
   const KeranjangPage({Key? key}) : super(key: key);
@@ -31,45 +33,42 @@ class _KeranjangPageState extends State<KeranjangPage> {
 
   Future<void> refreshCartItems(CookieRequest request) async {
     List<CartItem> listCart = [];
-    UserCart cart;
+    UserCart cart = UserCart(
+      model: '', // Nilai default
+      pk: 0, // Nilai default
+      fields: UserCartModel.Fields(
+          user: 0, totalItems: 0, totalPrice: 0), // Menggunakan alias
+    );
+
     setState(() => isLoading = true);
+
     try {
-      // Fetch cart items from Django
       final responseCartItem =
           await request.get("http://localhost:8000/keranjang/json/");
+      final responseUserCart =
+          await request.get("http://localhost:8000/keranjang/get-user-cart/");
+
+      // Parsing cart item data
       for (var d in responseCartItem) {
         if (d != null) {
           listCart.add(CartItem.fromJson(d));
         }
       }
-      // Fetch user cart from Django
-      final responseUserCart =
-          await request.get("http://localhost:8000/keranjang/get-user-cart/");
+
+      // Parsing user cart data dengan UserCart.fromJson
       for (var d in responseUserCart) {
         if (d != null) {
-          cart = UserCart.fromJson(d);
+          cart = UserCart.fromJson(
+              d); // Memastikan data diubah menjadi objek UserCart
         }
       }
 
-      // if (responseCartItem.statusCode == 200 && responseCartItem.statusCode == 200) {
-        // final List<dynamic> itemsJson = jsonDecode(itemsResponse.body);
-        // final List<dynamic> cartJson = jsonDecode(cartResponse.body);
-
-        setState(() {
-          // cartItems = itemsJson
-          //     .map((item) => CartItem.fromJson(item['fields']))
-          //     .toList();
-          // userCart = CartItem.fromJson(cartJson[0]['fields']);
-          cartItems = listCart;
-          for (var d in responseUserCart) {
-            if (d != null) {
-              userCart = UserCart.fromJson(d);
-            }
-          }
-          isLoading = false;
-        });
-      }
-    catch (e) {
+      setState(() {
+        cartItems = listCart;
+        userCart = cart; // Setelah data diparsing, set userCart
+        isLoading = false;
+      });
+    } catch (e) {
       setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error loading cart data')),
@@ -95,7 +94,7 @@ class _KeranjangPageState extends State<KeranjangPage> {
           : CartList(
               cartItems: cartItems,
               userCart: userCart!,
-              onRefresh: refreshCartItems(request),
+              onRefresh: () => refreshCartItems(request), // Referensi fungsi
               itemAdded: itemAdded,
             ),
     );

@@ -1,43 +1,58 @@
-import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
 import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:bytesoles/keranjang/widgets/success_header.dart';
-import 'package:bytesoles/keranjang/widgets/purchase_history.dart';
 import 'package:bytesoles/keranjang/models/cart_item.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
-class CheckoutSuccessPage extends StatelessWidget {
-  int totalPrice = 0;
+class CheckoutSuccessPage extends StatefulWidget {
+  const CheckoutSuccessPage({super.key});
+
+  @override
+  _CheckoutSuccessPageState createState() => _CheckoutSuccessPageState();
+}
+
+class _CheckoutSuccessPageState extends State<CheckoutSuccessPage> {
   List<CartItem> items = [];
+  int totalPrice = 0;
+  bool isLoading = true;
 
-  CheckoutSuccessPage({
-    super.key,
-    // required this.items,
-    // required this.totalPrice,
-  });
-  Future<List<CartItem>> getCartItem (CookieRequest request) async {
-    List<CartItem> listCart = [];
-    try{
-      final response = await request.get("http://localhost:8000/keranjang/json/");
-      for(var d in response){
-        if(d != null){
-          listCart.add(CartItem.fromJson(d));
-        }
+  // Fetch cart items from Django
+  Future<void> fetchCartItems(CookieRequest request) async {
+    try {
+      final response =
+          await request.get("http://localhost:8000/keranjang/json/");
+      final List<CartItem> fetchedItems =
+          response.map<CartItem>((item) => CartItem.fromJson(item)).toList();
+
+      // Calculate the total price
+      int calculatedTotalPrice = 0;
+      for (var item in fetchedItems) {
+        calculatedTotalPrice += item.fields.totalPrice;
       }
-    }catch(e){
 
+      // Update state
+      setState(() {
+        items = fetchedItems;
+        totalPrice = calculatedTotalPrice;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching cart items: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
-    return listCart;
   }
 
-
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final request = context.watch<CookieRequest>();
+    fetchCartItems(request);
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<CartItem> items = [];
-    int totalPrice;
-    final request = context.watch<CookieRequest>();
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -49,19 +64,21 @@ class CheckoutSuccessPage extends StatelessWidget {
         child: Container(
           color: Colors.black.withOpacity(0.6),
           child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildSuccessMessage(),
-                  const SizedBox(height: 24),
-                  _buildPurchaseHistory(),
-                  const SizedBox(height: 24),
-                  _buildReturnButton(context),
-                ],
-              ),
-            ),
+            child: isLoading
+                ? const CircularProgressIndicator() // Show loading indicator
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildSuccessMessage(),
+                        const SizedBox(height: 24),
+                        _buildPurchaseHistory(),
+                        const SizedBox(height: 24),
+                        _buildReturnButton(context),
+                      ],
+                    ),
+                  ),
           ),
         ),
       ),
@@ -71,11 +88,7 @@ class CheckoutSuccessPage extends StatelessWidget {
   Widget _buildSuccessMessage() {
     return Column(
       children: [
-        Icon(
-          Icons.check_circle,
-          size: 64,
-          color: Colors.green[600],
-        ),
+        Icon(Icons.check_circle, size: 64, color: Colors.green[600]),
         const SizedBox(height: 16),
         const Text(
           'Payment Successful!',
@@ -87,10 +100,7 @@ class CheckoutSuccessPage extends StatelessWidget {
         ),
         const Text(
           'Thank you for your purchase.',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey),
         ),
       ],
     );
@@ -107,14 +117,11 @@ class CheckoutSuccessPage extends StatelessWidget {
         children: [
           const Text(
             'Your Purchase History',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          // items.map((item) => _buildPurchaseItem(item)).toList(),
-          Divider(),
+          ...items.map((item) => _buildPurchaseItem(item)).toList(),
+          const Divider(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -123,9 +130,7 @@ class CheckoutSuccessPage extends StatelessWidget {
                 Text(
                   'Total: \$$totalPrice',
                   style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -149,51 +154,31 @@ class CheckoutSuccessPage extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              Image.network(
-                item.fields.sneakerImage,
-                width: 64,
-                height: 64,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.fields.sneakerName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text('Quantity: ${item.fields.quantity}'),
-                  ],
-                ),
-              ),
-              Text(
-                '\$${item.fields.totalPrice}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ],
+          Image.network(
+            item.fields.sneakerImage,
+            width: 64,
+            height: 64,
+            fit: BoxFit.cover,
           ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-              ),
-              child: const Text('Give Review'),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.fields.sneakerName,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text('Quantity: ${item.fields.quantity}'),
+              ],
             ),
+          ),
+          Text(
+            '\$${item.fields.totalPrice}',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
         ],
       ),
@@ -201,14 +186,13 @@ class CheckoutSuccessPage extends StatelessWidget {
   }
 
   Widget _buildReturnButton(BuildContext context) {
-  return ElevatedButton(
-    onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.home),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.green,
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-    ),
-    child: const Text('Return to Homepage'),
-  );
-}
-
+    return ElevatedButton(
+      onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.home),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green,
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      ),
+      child: const Text('Return to Homepage'),
+    );
+  }
 }

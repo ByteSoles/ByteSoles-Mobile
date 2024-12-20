@@ -7,7 +7,8 @@ import 'package:bytesoles/keranjang/models/cart_item.dart';
 class CartList extends StatelessWidget {
   final List<CartItem> cartItems;
   final UserCart userCart;
-  final Future<void> onRefresh;
+  final Future<void> Function()
+      onRefresh; // Pastikan tipe ini adalah Future<void> Function()
   final bool itemAdded;
 
   const CartList({
@@ -46,7 +47,8 @@ class CartList extends StatelessWidget {
               itemCount: cartItems.length,
               itemBuilder: (context, index) => CartItemCard(
                 item: cartItems[index],
-                onRefresh: onRefresh,
+                onRefresh:
+                    onRefresh(), // Berikan referensi fungsi onRefresh tanpa tanda kurung
               ),
             ),
             OrderSummary(userCart: userCart),
@@ -56,3 +58,4 @@ class CartList extends StatelessWidget {
     );
   }
 }
+

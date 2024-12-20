@@ -1,6 +1,6 @@
+import 'package:bytesoles/keranjang/models/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:bytesoles/keranjang/models/cart_item.dart';
 
 class CartItemCard extends StatelessWidget {
   final CartItem item;
@@ -13,35 +13,47 @@ class CartItemCard extends StatelessWidget {
   }) : super(key: key);
 
   Future<void> updateQuantity(String sneakerId, int quantity) async {
+    final csrfToken = 'your-csrf-token'; // Pastikan kamu mendapatkan token CSRF
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/keranjang/update-quantity/'),
+        Uri.parse('http://localhost:8000/keranjang/update-quantity-ajax/'),
+        headers: {
+          'X-CSRFToken': csrfToken,
+        },
         body: {
           'sneaker': sneakerId,
           'quantity': quantity.toString(),
         },
       );
       if (response.statusCode == 200) {
-        onRefresh;
+        onRefresh; // Memanggil ulang refresh untuk memperbarui UI
       }
     } catch (e) {
       print('Error updating quantity: $e');
     }
   }
 
-  Future<void> removeItem(String sneakerId) async {
+  Future<void> removeItem(BuildContext context, String sneakerId) async {
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/keranjang/remove/'),
+        Uri.parse('http://localhost:8000/keranjang/remove-from-cart-ajax/'),
         body: {
           'sneaker': sneakerId,
         },
       );
       if (response.statusCode == 200) {
-        onRefresh;
+        onRefresh; // Memanggil ulang refresh untuk memperbarui UI
+      } else if (response.statusCode == 302) {
+        // Jika pengalihan (redirect) terjadi, arahkan ke halaman login
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('You need to log in first!')),
+        );
       }
     } catch (e) {
       print('Error removing item: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error removing item')),
+      );
     }
   }
 
@@ -52,7 +64,6 @@ class CartItemCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(
               item.fields.sneakerImage,
@@ -68,30 +79,22 @@ class CartItemCard extends StatelessWidget {
                   Text(
                     item.fields.sneakerName,
                     style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 8),
                   Text('\$${item.fields.sneakerPrice}'),
-                  Row(
-                    children: [
-                      const Text('Quantity: '),
-                      DropdownButton<int>(
-                        value: item.fields.quantity,
-                        items: List.generate(10, (i) => i + 1)
-                            .map((i) => DropdownMenuItem(
-                                  value: i,
-                                  child: Text('$i'),
-                                ))
-                            .toList(),
-                        onChanged: (value) async {
-                          if (value != null) {
-                            await updateQuantity(item.pk.toString(), value);
-                          }
-                        },
-                      ),
-                    ],
+                  DropdownButton<int>(
+                    value: item.fields.quantity,
+                    items: List.generate(10, (i) => i + 1)
+                        .map((i) => DropdownMenuItem(
+                              value: i,
+                              child: Text('$i'),
+                            ))
+                        .toList(),
+                    onChanged: (value) async {
+                      if (value != null) {
+                        await updateQuantity(item.pk.toString(), value);
+                      }
+                    },
                   ),
                 ],
               ),
@@ -99,18 +102,15 @@ class CartItemCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  '\$${item.fields.totalPrice}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text('\$${item.fields.totalPrice}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 TextButton(
                   onPressed: () async {
-                    await removeItem(item.pk.toString());
+                    await removeItem(
+                        context, item.pk.toString()); // Pass context
                   },
-                  child: const Text(
-                    'Remove',
-                    style: TextStyle(color: Colors.red),
-                  ),
+                  child:
+                      const Text('Remove', style: TextStyle(color: Colors.red)),
                 ),
               ],
             ),
