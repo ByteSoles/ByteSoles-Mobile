@@ -3,6 +3,7 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:bytesoles/catalog/models/sneaker.dart';
 import 'package:bytesoles/catalog/widgets/recently_viewed.dart';
+import 'package:bytesoles/widgets/header.dart';
 
 class SneakerDetail extends StatefulWidget {
   final int sneakerId;
@@ -87,9 +88,10 @@ class _SneakerDetailState extends State<SneakerDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Shoe Details'),
-      ),
+    appBar: CustomHeader(
+      title: '',
+      onMenuPressed: () => Scaffold.of(context).openDrawer(),
+    ),
       body: SingleChildScrollView(
         child: Column(
           children: [
