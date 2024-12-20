@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:bytesoles/userprofile/screens/profile_screen.dart';
 import 'package:bytesoles/widgets/header.dart'; // Import CustomHeader
+import 'package:bytesoles/widgets/footer.dart'; 
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -43,7 +44,6 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         drawer: _buildDrawer(context),
         appBar: CustomHeader(
-          title: '',
           isLoggedIn: isLoggedIn,
           onMenuPressed: () => Scaffold.of(context).openDrawer(),
           onLoginPressed: () {
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                 child: _buildHomeScreenList(context),
               ),
               const SizedBox(height: 20),
-              _buildFooter(context),
+              CustomFooter(),
             ],
           ),
         ),
@@ -215,40 +215,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// Widget untuk footer
-  Widget _buildFooter(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      color: Colors.black,
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        children: [
-          const Text(
-            '© 2024 Byte Soles. All rights reserved.',
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          ),
-          const SizedBox(height: 15),
-          const Text(
-            'Made by: Yovan, Dapqil, Caca, Farhan, Qibas',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildFooterButton(BuildContext context, String text, String route) {
-    return TextButton(
-      onPressed: () => Navigator.pushNamed(context, route),
-      child: Text(
-        text,
-        style: const TextStyle(color: Colors.white, fontSize: 14),
-      ),
-    );
-  }
+
+
+  // Widget _buildFooterButton(BuildContext context, String text, String route) {
+  //   return TextButton(
+  //     onPressed: () => Navigator.pushNamed(context, route),
+  //     child: Text(
+  //       text,
+  //       style: const TextStyle(color: Colors.white, fontSize: 14),
+  //     ),
+  //   );
+  // }
 
   /// Widget untuk drawer
   Widget _buildDrawer(BuildContext context) {

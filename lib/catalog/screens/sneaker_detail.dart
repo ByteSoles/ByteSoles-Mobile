@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:bytesoles/catalog/models/sneaker.dart';
 import 'package:bytesoles/catalog/widgets/recently_viewed.dart';
 import 'package:bytesoles/widgets/header.dart';
+import 'package:bytesoles/widgets/footer.dart';
 
 class SneakerDetail extends StatefulWidget {
   final int sneakerId;
@@ -89,7 +90,6 @@ class _SneakerDetailState extends State<SneakerDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
     appBar: CustomHeader(
-      title: '',
       onMenuPressed: () => Scaffold.of(context).openDrawer(),
     ),
       body: SingleChildScrollView(
@@ -350,6 +350,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                 },
               ),
             ),
+            const SizedBox(height: 20),
+            CustomFooter(),
           ],
         ),
       ),

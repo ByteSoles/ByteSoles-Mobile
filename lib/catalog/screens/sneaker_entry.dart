@@ -75,7 +75,6 @@ class _SneakerEntryState extends State<SneakerEntry> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeader(
-        title: '',
         isLoggedIn: context.read<CookieRequest>().loggedIn,
         onMenuPressed: () => Scaffold.of(context).openDrawer(),
         onLoginPressed: () {

@@ -2,14 +2,12 @@ import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
   final VoidCallback? onMenuPressed;
   final VoidCallback? onLoginPressed;
   final bool isLoggedIn;
 
   const CustomHeader({
     super.key,
-    required this.title,
     this.onMenuPressed,
     this.onLoginPressed,
     this.isLoggedIn = false,
@@ -24,25 +22,13 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       leading: _buildMenuButton(context),
       centerTitle: true,
-      title: Column(
-        children: [
-          const Text(
-            'Bytesoles',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
-              color: Colors.grey,
-            ),
-          ),
-        ],
+      title: const Text(
+        'Bytesoles',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
       ),
       actions: [
         Padding(
@@ -89,6 +75,9 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
       ),
       onSelected: (value) {
         switch (value) {
+          case 'Homepage':
+            Navigator.pushNamed(context, AppRoutes.home);
+            break;
           case 'Wishlist':
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Wishlist page coming soon!')),
@@ -102,12 +91,16 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
               const SnackBar(content: Text('Cart page coming soon!')),
             );
             break;
-          case 'Homepage':
-            Navigator.pushNamed(context, AppRoutes.home);
-            break;
         }
       },
       itemBuilder: (context) => [
+        const PopupMenuItem(
+          value: 'Homepage',
+          child: ListTile(
+            leading: Icon(Icons.home, color: Colors.black),
+            title: Text('Homepage'),
+          ),
+        ),
         const PopupMenuItem(
           value: 'Wishlist',
           child: ListTile(
@@ -127,13 +120,6 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
           child: ListTile(
             leading: Icon(Icons.receipt_long, color: Colors.black),
             title: Text('List Cart'),
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'Homepage',
-          child: ListTile(
-            leading: Icon(Icons.home, color: Colors.black),
-            title: Text('Homepage'),
           ),
         ),
       ],
