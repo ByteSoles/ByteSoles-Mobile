@@ -1,8 +1,11 @@
+import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:bytesoles/catalog/models/sneaker.dart';
 import 'package:bytesoles/catalog/widgets/recently_viewed.dart';
+import 'package:bytesoles/widgets/header.dart';
+import 'package:bytesoles/widgets/footer.dart';
 
 class SneakerDetail extends StatefulWidget {
   final int sneakerId;
@@ -87,9 +90,9 @@ class _SneakerDetailState extends State<SneakerDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Shoe Details'),
-      ),
+    appBar: CustomHeader(
+      onMenuPressed: () => Scaffold.of(context).openDrawer(),
+    ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -193,7 +196,10 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           const SizedBox(height: 20),
                           // Add to Cart Button
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              // Navigasi ke halaman keranjang
+                              Navigator.pushNamed(context, AppRoutes.keranjangPage);
+                            },
                             icon: const Icon(Icons.shopping_cart),
                             label: const Text('Add to Cart'),
                             style: ElevatedButton.styleFrom(
@@ -348,6 +354,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                 },
               ),
             ),
+            const SizedBox(height: 20),
+            CustomFooter(),
           ],
         ),
       ),

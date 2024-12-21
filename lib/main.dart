@@ -8,6 +8,9 @@ import 'screens/register.dart';
 import 'userprofile/screens/profile_screen.dart';
 import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
 import 'package:bytesoles/catalog/screens/sneaker_detail.dart';
+import 'package:bytesoles/catalog/screens/sneaker_entry.dart'; 
+import 'package:bytesoles/keranjang/screens/keranjang_page.dart';
+import 'package:bytesoles/keranjang/screens/checkout_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,20 +37,10 @@ class MyApp extends StatelessWidget {
           AppRoutes.register: (context) => const RegisterPage(),
           AppRoutes.profile: (context) => const ProfileScreen(),
           AppRoutes.catalogProductsScreen: (context) => const SneakerEntry(),
-        },
-        onGenerateRoute: (settings) {
-          if (settings.name?.startsWith('/catalog-products/') ?? false) {
-            final id = int.tryParse(settings.name!.split('/').last);
-            if (id != null) {
-              return MaterialPageRoute(
-                builder: (context) => SneakerDetail(sneakerId: id),
-              );
-            }
-          }
-          return null;
+          AppRoutes.keranjangPage: (context) => const KeranjangPage(),
+          AppRoutes.checkoutPage: (context) => const CheckoutSuccessPage(),
         },
       ),
     );
   }
 }
-
