@@ -37,6 +37,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
         await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
     return Sneaker.fromJson(response);
   }
+
   Future<List<Sneaker>> fetchRecentlyViewed() async {
     final request = context.read<CookieRequest>();
     final recentIds = await RecentlyViewedManager.getItems();
@@ -58,31 +59,32 @@ class _SneakerDetailState extends State<SneakerDetail> {
   }
 
   void _showLoginPopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Login Required'),
-        content: const Text('You need to be logged in to access this feature.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.pushNamed(context, AppRoutes.login);
-            },
-            child: const Text('Login'),
-          ),
-        ],
-      );
-    },
-  );
-}
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Login Required'),
+          content:
+              const Text('You need to be logged in to access this feature.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, AppRoutes.login);
+              },
+              child: const Text('Login'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> clearRecentlyViewed() async {
     bool? confirm = await showDialog<bool>(
@@ -227,13 +229,64 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           const SizedBox(height: 20),
                           // Add to Cart Button
                           ElevatedButton.icon(
-                            onPressed: (){
+                            onPressed: () async {
                               final request = context.read<CookieRequest>();
 
-                              if (request.loggedIn) {
-                                Navigator.pushNamed(context, AppRoutes.keranjangPage);
-                              } else {
+                              if (!request.loggedIn) {
                                 _showLoginPopup(context);
+                                return;
+                              }
+
+                              try {
+                                // Debug prints
+                                print(
+                                    'Sending data - User ID: ${request.jsonData['user_id']}, Sneaker ID: ${widget.sneakerId}');
+
+                                final response = await request.post(
+                                  "http://localhost:8000/keranjang/add-to-cart-flutter/",
+                                  {
+                                    'user':
+                                        request.jsonData['user_id'].toString(),
+                                    'sneaker': widget.sneakerId.toString(),
+                                  },
+                                );
+
+                                print(
+                                    'Response received: $response'); // Tambahkan debug print untuk response
+
+                                if (!context.mounted) return;
+
+                                if (response['status'] == 'success') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Berhasil menambahkan ke keranjang!'),
+                                      backgroundColor: Colors.green,
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                  Navigator.pushNamed(
+                                      context, AppRoutes.keranjangPage);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Gagal menambahkan ke keranjang: ${response['message']}'),
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                print('Error adding to cart: $e'); // Debug print
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Terjadi kesalahan: $e'),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
                               }
                             },
                             icon: const Icon(Icons.shopping_cart),
@@ -243,7 +296,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                               foregroundColor: Colors.white,
                               minimumSize: const Size.fromHeight(50),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -263,11 +317,12 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           const SizedBox(height: 10),
                           // Reviews Button
                           ElevatedButton.icon(
-                            onPressed: (){
+                            onPressed: () {
                               final request = context.read<CookieRequest>();
 
                               if (request.loggedIn) {
-                                Navigator.pushNamed(context, AppRoutes.keranjangPage);
+                                Navigator.pushNamed(
+                                    context, AppRoutes.keranjangPage);
                               } else {
                                 _showLoginPopup(context);
                               }

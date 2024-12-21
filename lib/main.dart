@@ -1,5 +1,5 @@
 // import 'package:bytesoles/keranjang/widgets/cart_item_card.dart';
-import 'package:bytesoles/keranjang/screens/cart_setvice.dart';
+// import 'package:bytesoles/keranjang/screens/cart_setvice.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.profile: (context) => const ProfileScreen(),
           AppRoutes.catalogProductsScreen: (context) => const SneakerEntry(),
           AppRoutes.keranjangPage: (context) => const KeranjangPage(),
-          // AppRoutes.checkoutPage: (context) => addToCart(),
+          AppRoutes.checkoutPage: (context) => CheckoutSuccessPage(),
 
           // Tambahkan route lainnya jika diperlukan
         },

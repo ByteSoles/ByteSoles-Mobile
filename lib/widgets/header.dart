@@ -86,9 +86,7 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
             Navigator.pushNamed(context, AppRoutes.catalogProductsScreen);
             break;
           case 'List Cart':
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Cart page coming soon!')),
-            );
+            Navigator.pushNamed(context, AppRoutes.keranjangPage);
             break;
         }
       },
