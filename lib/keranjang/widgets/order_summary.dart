@@ -3,7 +3,7 @@ import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:bytesoles/keranjang/models/cart_item.dart';
 
-class OrderSummary extends StatelessWidget {
+class OrderSummary extends StatefulWidget {
   final UserCart userCart;
 
   const OrderSummary({
@@ -12,7 +12,23 @@ class OrderSummary extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _OrderSummaryState createState() => _OrderSummaryState();
+}
+
+class _OrderSummaryState extends State<OrderSummary> {
+  late UserCart userCart;
+
+  @override
+  void initState() {
+    super.initState();
+    userCart = widget.userCart; // Initialize with the passed userCart
+  }
+
+  @override
   Widget build(BuildContext context) {
+    int totalItems = userCart.fields.totalItems;
+    int totalPrice = userCart.fields.totalPrice;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -33,8 +49,8 @@ class OrderSummary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${userCart.pk.toInt()} Items'),
-              Text('\$${userCart.pk.toInt()}'),
+              Text('$totalItems Items'),
+              Text('\$$totalPrice'),
             ],
           ),
           const SizedBox(height: 8),
@@ -54,7 +70,7 @@ class OrderSummary extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                '\$${userCart.pk.toInt()}',
+                '\$$totalPrice',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
@@ -78,7 +94,7 @@ class OrderSummary extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // Pindah ke route keranjangPage
+                // Pindah ke route checkoutPage
                 Navigator.pushNamed(context, AppRoutes.checkoutPage);
 
                 // Menampilkan snackbar
@@ -93,7 +109,6 @@ class OrderSummary extends StatelessWidget {
               child: const Text('Checkout'),
             ),
           ),
-
         ],
       ),
     );

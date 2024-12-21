@@ -1,5 +1,6 @@
 import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
 import 'package:bytesoles/keranjang/models/user_cart.dart';
+import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -87,7 +88,24 @@ class _KeranjangPageState extends State<KeranjangPage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Cart'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamed(context, AppRoutes.home);
+          },
+        ),
+        title: const Text(
+          'Your Cart',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        centerTitle: true, // Untuk memposisikan judul di tengah seperti di gambar
+        backgroundColor: Colors.white, // Sesuai dengan desain yang light
+        elevation: 0, // Menghilangkan shadow
+        iconTheme: const IconThemeData(color: Colors.black), // Warna icon back button
+        titleTextStyle: const TextStyle(color: Colors.black), // Warna text judul
       ),
       body: cartItems.isEmpty
           ? const EmptyCart()

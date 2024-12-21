@@ -27,10 +27,6 @@ class CartList extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Your Bag',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            ),
             if (itemAdded)
               Container(
                 padding: const EdgeInsets.all(16),
@@ -48,7 +44,7 @@ class CartList extends StatelessWidget {
               itemBuilder: (context, index) => CartItemCard(
                 item: cartItems[index],
                 onRefresh:
-                    onRefresh(), // Berikan referensi fungsi onRefresh tanpa tanda kurung
+                    onRefresh, // Berikan referensi fungsi onRefresh tanpa tanda kurung
               ),
             ),
             OrderSummary(userCart: userCart),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bytesoles/catalog/models/sneaker.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:bytesoles/catalog/widgets/sneaker_card.dart'; // Impor SneakerCard
-import 'package:bytesoles/catalog/widgets/recently_viewed.dart'; // Updated import path
+import 'package:bytesoles/catalog/widgets/sneaker_card.dart';
+import 'package:bytesoles/widgets/header.dart'; // Import CustomHeader
 
 class SneakerEntry extends StatefulWidget {
   const SneakerEntry({super.key});
@@ -13,69 +13,198 @@ class SneakerEntry extends StatefulWidget {
 }
 
 class _SneakerEntryState extends State<SneakerEntry> {
-  Future<List<Sneaker>> fetchSneakers(CookieRequest request) async {
-    // Replace 10.0.2.2 with your computer's IP address when testing on a physical device
-    // 10.0.2.2 is the special alias to your host machine when using Android emulator
-    final response =
-        await request.get('http://127.0.0.1:8000/catalog/view-json/');
-        //await request.get('http://10.0.2.2:8000/catalog/view-json/');
+  List<Sneaker> allSneakers = [];
+  List<Sneaker> displayedSneakers = [];
+  String selectedBrand = 'All';
+  String selectedSortOption = 'Default';
+  Set<String> availableBrands = {'All'};
 
-    // Melakukan decode response menjadi bentuk json
-    var data = response;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final request = context.read<CookieRequest>();
+      fetchSneakers(request);
+    });
+  }
 
-    // Konversi data json menjadi object Sneaker
-    List<Sneaker> listSneakers = [];
-    for (var d in data) {
+  Future<void> fetchSneakers(CookieRequest request) async {
+    final response = await request.get('http://127.0.0.1:8000/catalog/view-json/');
+    List<Sneaker> sneakers = [];
+    for (var d in response) {
       if (d != null) {
-        listSneakers.add(Sneaker.fromJson(d));
+        sneakers.add(Sneaker.fromJson(d));
       }
     }
-    return listSneakers;
+
+    Set<String> brands = {'All'};
+    for (var sneaker in sneakers) {
+      brands.add(sneaker.fields.brand);
+    }
+
+    setState(() {
+      allSneakers = sneakers;
+      displayedSneakers = List.from(allSneakers);
+      availableBrands = brands;
+    });
+  }
+
+  void filterByBrand(String brand) {
+    setState(() {
+      selectedBrand = brand;
+      if (brand == 'All') {
+        displayedSneakers = List.from(allSneakers);
+      } else {
+        displayedSneakers = allSneakers.where((s) => s.fields.brand == brand).toList();
+      }
+    });
+  }
+
+  void sortSneakers(String sortOption) {
+    setState(() {
+      selectedSortOption = sortOption;
+      if (sortOption == 'Price: Low to High') {
+        displayedSneakers.sort((a, b) => a.fields.price.compareTo(b.fields.price));
+      } else if (sortOption == 'Price: High to Low') {
+        displayedSneakers.sort((a, b) => b.fields.price.compareTo(a.fields.price));
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final request = context.watch<CookieRequest>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Catalog'),
-      ),
-      body: FutureBuilder(
-        future: fetchSneakers(request),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'Belum ada data sneakers yang tersedia.',
-                style: TextStyle(fontSize: 20, color: Colors.red),
-              ),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                  childAspectRatio: 0.75,
-                ),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (_, index) {
-                  final sneaker = snapshot.data![index];
-                  return SneakerCard(sneaker: sneaker);
-                },
-              ),
-            );
-          }
+      appBar: CustomHeader(
+        isLoggedIn: context.read<CookieRequest>().loggedIn,
+        onMenuPressed: () => Scaffold.of(context).openDrawer(),
+        onLoginPressed: () {
+          Navigator.pushNamed(context, '/login');
         },
       ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  '100+ Items',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => _showSortOptions(),
+                      icon: const Icon(Icons.sort, size: 18),
+                      label: const Text('Sort'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        elevation: 2,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      onPressed: () => _showFilterOptions(),
+                      icon: const Icon(Icons.filter_alt, size: 18),
+                      label: const Text('Filter'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        elevation: 2,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          displayedSneakers.isEmpty
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text(
+                      'Belum ada data sneakers yang tersedia.',
+                      style: TextStyle(fontSize: 20, color: Colors.red),
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8.0,
+                      mainAxisSpacing: 8.0,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemCount: displayedSneakers.length,
+                    itemBuilder: (_, index) {
+                      final sneaker = displayedSneakers[index];
+                      return SneakerCard(sneaker: sneaker);
+                    },
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  void _showFilterOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ListView(
+          shrinkWrap: true,
+          children: availableBrands.map((brand) {
+            return ListTile(
+              title: Text(brand),
+              onTap: () {
+                filterByBrand(brand);
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  void _showSortOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ListView(
+          shrinkWrap: true,
+          children: [
+            ListTile(
+              title: const Text('Default'),
+              onTap: () {
+                sortSneakers('Default');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Price: Low to High'),
+              onTap: () {
+                sortSneakers('Price: Low to High');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Price: High to Low'),
+              onTap: () {
+                sortSneakers('Price: High to Low');
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
