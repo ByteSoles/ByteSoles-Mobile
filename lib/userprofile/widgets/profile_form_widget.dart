@@ -46,14 +46,13 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
     shoeSizeController = TextEditingController(
       text: widget.profile.shoeSize?.toString() ?? '',
     );
-    addressController =
-        TextEditingController(text: widget.profile.shippingAddress ?? '');
+    addressController = TextEditingController(text: widget.profile.shippingAddress ?? '');
   }
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
+    
     if (image != null) {
       setState(() {
         _imageFile = File(image.path);
@@ -117,6 +116,7 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
           ),
         ),
         const SizedBox(height: 20),
+        
         if (widget.isEditing) ...[
           _buildTextField(
             "First Name",
@@ -149,30 +149,27 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
             onPressed: () async {
               final request = context.read<CookieRequest>();
               try {
+                // Persiapkan data yang akan dikirim
                 final data = {
-                  'first_name': firstNameController.text,
-                  'last_name': lastNameController.text,
-                  'email': emailController.text,
-                  'shoe_size': shoeSizeController.text,
-                  'shipping_address': addressController.text,
+                  'first_name': firstNameController.text.isEmpty ? '-' : firstNameController.text,
+                  'last_name': lastNameController.text.isEmpty ? '-' : lastNameController.text,
+                  'email': emailController.text.isEmpty ? '-' : emailController.text,
+                  'shoe_size': shoeSizeController.text.isEmpty ? '-' : shoeSizeController.text,
+                  'shipping_address': addressController.text.isEmpty ? '-' : addressController.text,
                 };
-
+                
+                // Kirim data ke server
                 final response = await request.post(
-                  'http://10.0.2.2:8000/user_profile/update_profile/',
+                  'http://localhost:8000/user_profile/update_profile/',
                   data,
                 );
-
+                
                 if (response['status'] == 'success') {
                   widget.onSave();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Profil berhasil diperbarui')),
-                  );
                 }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content:
-                          Text('Gagal memperbarui profil: ${e.toString()}')),
+                  SnackBar(content: Text('Gagal memperbarui profil: ${e.toString()}')),
                 );
               }
             },
@@ -186,16 +183,15 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
           _buildInfoRow("First Name", widget.profile.firstName),
           _buildInfoRow("Last Name", widget.profile.lastName),
           _buildInfoRow("Email", widget.profile.email),
-          _buildInfoRow(
-              "Shoe Size", widget.profile.shoeSize?.toString() ?? '-'),
-          _buildInfoRow(
-              "Shipping Address", widget.profile.shippingAddress ?? '-'),
+          _buildInfoRow("Shoe Size", widget.profile.shoeSize?.toString() ?? '-'),
+          _buildInfoRow("Shipping Address", widget.profile.shippingAddress ?? '-'),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
               final request = context.read<CookieRequest>();
-              final response = await request
-                  .logout('http://localhost:8000/authentication/logout/');
+              final response = await request.logout(
+                'http://localhost:8000/authentication/logout/'
+              );
               if (response['status'] == 'success') {
                 Navigator.pushReplacementNamed(context, '/login');
               }
@@ -239,8 +235,7 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
           ),
           filled: true,
           fillColor: Colors.grey[100],
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
     );

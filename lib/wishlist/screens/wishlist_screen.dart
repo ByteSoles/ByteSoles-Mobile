@@ -1,229 +1,164 @@
 import 'package:flutter/material.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
-import '../models/wishlist_item.dart';
-import '../widgets/wishlist_card.dart';
 
 class WishlistScreen extends StatefulWidget {
-  const WishlistScreen({super.key});
+  const WishlistScreen({Key? key}) : super(key: key);
 
   @override
   State<WishlistScreen> createState() => _WishlistScreenState();
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
-  List<WishlistItem> _wishlistItems = [];
-  String _selectedBrand = 'all';
-  RangeValues _currentRangeValues = const RangeValues(50, 500);
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchWishlist();
-  }
-
-  Future<void> fetchWishlist() async {
-    if (!mounted) return;
-
-    final request = context.read<CookieRequest>();
-    try {
-      final response =
-          await request.get('http://localhost:8000/wishlist/json/');
-      if (!mounted) return;
-
-      if (response != null) {
-        setState(() {
-          _wishlistItems = (response as List)
-              .map((item) => WishlistItem.fromJson(item))
-              .toList();
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Gagal memuat wishlist")),
-      );
-    }
-  }
-
-  List<WishlistItem> getFilteredItems() {
-    return _wishlistItems.where((item) {
-      final brandMatch =
-          _selectedBrand == 'all' || item.brand == _selectedBrand;
-      final priceMatch = item.price >= _currentRangeValues.start &&
-          item.price <= _currentRangeValues.end;
-      return brandMatch && priceMatch;
-    }).toList();
-  }
-
-  Future<void> removeFromWishlist(int productId) async {
-    if (!mounted) return;
-
-    final request = context.read<CookieRequest>();
-    try {
-      final response = await request.post(
-        'http://localhost:8000/wishlist/remove/$productId/',
-        {
-          'user': request.jsonData['user_id'].toString(),
-        },
-      );
-
-      if (!mounted) return;
-
-      if (response['status'] == 'success') {
-        setState(() {
-          _wishlistItems.removeWhere((item) => item.id == productId);
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Berhasil menghapus dari wishlist")),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Gagal menghapus dari wishlist")),
-      );
-    }
-  }
+  // Simulasi data wishlist
+  List<String> wishlistItems = []; // Kosong saat belum ada data
 
   @override
   Widget build(BuildContext context) {
-    final request = context.watch<CookieRequest>();
-    final filteredItems = getFilteredItems();
-
-    if (!request.loggedIn) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('My Wishlist'),
-          backgroundColor: Colors.black,
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Anda harus login untuk melihat wishlist',
-                style: TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                ),
-                child: const Text('Login'),
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: const Color(0xFFFDFDFD),
+      appBar: AppBar(
+        title: const Text(
+          'Bytesoles',
+          style: TextStyle(
+            color: Color(0xFF161616),
+            fontSize: 18,
+            fontFamily: 'Madimi One',
           ),
         ),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Wishlist'),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+          // Bagian header yang tetap ada
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                DropdownButton<String>(
-                  value: _selectedBrand,
-                  isExpanded: true,
-                  items: const [
-                    DropdownMenuItem(value: 'all', child: Text('All Brands')),
-                    DropdownMenuItem(value: 'Jordan', child: Text('Jordan')),
-                    DropdownMenuItem(value: 'Nike', child: Text('Nike')),
-                    DropdownMenuItem(value: 'adidas', child: Text('adidas')),
-                    DropdownMenuItem(
-                        value: 'New Balance', child: Text('New Balance')),
-                    DropdownMenuItem(value: 'Crocs', child: Text('Crocs')),
-                    DropdownMenuItem(value: 'MSCHF', child: Text('MSCHF')),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedBrand = value!;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                const Text('Price Range'),
-                RangeSlider(
-                  values: _currentRangeValues,
-                  min: 50,
-                  max: 500,
-                  divisions: 45,
-                  labels: RangeLabels(
-                    '\$${_currentRangeValues.start.round()}',
-                    '\$${_currentRangeValues.end.round()}',
+                Text(
+                  wishlistItems.isEmpty ? '0 Items' : '${wishlistItems.length} Items',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w500,
                   ),
-                  onChanged: (RangeValues values) {
-                    setState(() {
-                      _currentRangeValues = values;
-                    });
-                  },
                 ),
+                if (wishlistItems.isNotEmpty)
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.sort, color: Colors.black),
+                        onPressed: () {
+                          // TODO: Tambahkan logika sorting
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.filter_list, color: Colors.black),
+                        onPressed: () {
+                          // TODO: Tambahkan logika filter
+                        },
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
+
+          // Konten utama
           Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : filteredItems.isEmpty
-                    ? const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Your wishlist is empty',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.grey),
-                            ),
-                            SizedBox(height: 16),
-                            Text(
-                              'Explore sneakers',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.7,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
-                        itemCount: filteredItems.length,
-                        itemBuilder: (ctx, i) =>
-                            buildWishlistCard(filteredItems[i]),
-                      ),
+            child: wishlistItems.isEmpty
+                ? _buildEmptyWishlist(context)
+                : _buildWishlistWithItems(),
           ),
         ],
       ),
     );
   }
 
-  Widget buildWishlistCard(WishlistItem item) {
-    return WishlistCard(
-      wishlist: item,
-      onRemove: removeFromWishlist,
+  // Widget untuk menampilkan wishlist kosong
+  Widget _buildEmptyWishlist(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.favorite_border,
+            size: 100,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Your Wishlist is Empty',
+            style: TextStyle(
+              fontSize: 24,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Text(
+              'Login to save your favorite items and create your wishlist',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+              ),
+            ),
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton(
+            onPressed: () {
+              // TODO: Navigasi ke halaman katalog
+              Navigator.pop(context); // Sementara hanya kembali
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 40,
+                vertical: 16,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'Browse Catalog',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget untuk menampilkan wishlist dengan item
+  Widget _buildWishlistWithItems() {
+    return ListView.builder(
+      itemCount: wishlistItems.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          leading: const Icon(Icons.favorite, color: Colors.red),
+          title: Text(wishlistItems[index]),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete, color: Colors.grey),
+            onPressed: () {
+              setState(() {
+                wishlistItems.removeAt(index); // Hapus item dari wishlist
+              });
+            },
+          ),
+        );
+      },
     );
   }
 }

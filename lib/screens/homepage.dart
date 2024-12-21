@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:bytesoles/userprofile/screens/profile_screen.dart';
 import 'package:bytesoles/widgets/header.dart'; // Import CustomHeader
-import 'package:bytesoles/widgets/footer.dart';
+import 'package:bytesoles/widgets/footer.dart'; 
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -68,8 +68,8 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   "Hello, $username!",
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.black,
-                      ),
+                    color: Colors.black,
+                  ),
                 ),
               ),
               const SizedBox(height: 18),
@@ -154,42 +154,14 @@ class _HomePageState extends State<HomePage> {
     final List<Map<String, dynamic>> items = [
       {
         'title': 'Catalog',
-        'onTap': () =>
-            Navigator.pushNamed(context, AppRoutes.catalogProductsScreen),
+        'onTap': () => Navigator.pushNamed(context, AppRoutes.catalogProductsScreen),
       },
       {
+        
         'title': 'Wishlist',
-        'onTap': () {
-          final request = context.read<CookieRequest>();
-          if (request.loggedIn) {
-            Navigator.pushNamed(context, AppRoutes.wishlist);
-          } else {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Login Required'),
-                  content: const Text('Please login to access your wishlist'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(context, AppRoutes.login);
-                      },
-                      child: const Text('Login'),
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        },
+        'onTap': () => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Wishlist page coming soon!')),
+            ),
       },
       {
         'title': 'Cart',
@@ -216,8 +188,7 @@ class _HomePageState extends State<HomePage> {
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context); // Tutup dialog
-                        Navigator.pushNamed(context,
-                            AppRoutes.login); // Navigasi ke halaman login
+                        Navigator.pushNamed(context, AppRoutes.login); // Navigasi ke halaman login
                       },
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.blue,
@@ -248,18 +219,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildFeatureItem(
-      {required String title, required VoidCallback onTap}) {
+  Widget _buildFeatureItem({required String title, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 100,
         margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          image: const DecorationImage(
-            image: AssetImage('assets/images/bg_catalog.png'),
-            fit: BoxFit.cover,
-          ),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/bg_catalog.png'),
+          fit: BoxFit.cover,
+        ),
+          
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -272,13 +243,15 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: Text(
             title,
-            style: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white),
           ),
         ),
       ),
     );
   }
+
+
+
 
   // Widget _buildFooterButton(BuildContext context, String text, String route) {
   //   return TextButton(

@@ -7,11 +7,11 @@ import 'screens/login.dart';
 import 'screens/register.dart';
 import 'userprofile/screens/profile_screen.dart';
 import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
-import 'package:bytesoles/catalog/screens/sneaker_detail.dart';
-import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
 import 'package:bytesoles/keranjang/screens/keranjang_page.dart';
 import 'package:bytesoles/keranjang/screens/checkout_page.dart';
-import 'package:bytesoles/wishlist/screens/wishlist_screen.dart';
+import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
+import 'package:bytesoles/catalog/screens/sneaker_detail.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -39,11 +39,9 @@ class MyApp extends StatelessWidget {
           AppRoutes.profile: (context) => const ProfileScreen(),
           AppRoutes.catalogProductsScreen: (context) => const SneakerEntry(),
           AppRoutes.keranjangPage: (context) => const KeranjangPage(),
-          AppRoutes.checkoutPage: (context) => const CheckoutSuccessPage(),
-          AppRoutes.wishlist: (context) => const WishlistScreen(),
+          AppRoutes.checkoutPage: (context) => CheckoutSuccessPage()
         },
       ),
     );
   }
-  // test mengetik dengan sebuah laptop daming yovan
 }

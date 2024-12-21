@@ -4,46 +4,42 @@
 
 import 'dart:convert';
 
-List<WishlistItem> wishlistFromJson(String str) => List<WishlistItem>.from(
-    json.decode(str).map((x) => WishlistItem.fromJson(x)));
+List<Wishlist> wishlistFromJson(String str) => List<Wishlist>.from(json.decode(str).map((x) => Wishlist.fromJson(x)));
 
-String wishlistToJson(List<WishlistItem> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String wishlistToJson(List<Wishlist> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class WishlistItem {
-  final int id;
-  final String name;
-  final String brand;
-  final double price;
-  final String image;
-  final String slug;
+class Wishlist {
+    int id;
+    String name;
+    String brand;
+    String price;
+    String image;
+    String slug;
 
-  WishlistItem({
-    required this.id,
-    required this.name,
-    required this.brand,
-    required this.price,
-    required this.image,
-    required this.slug,
-  });
+    Wishlist({
+        required this.id,
+        required this.name,
+        required this.brand,
+        required this.price,
+        required this.image,
+        required this.slug,
+    });
 
-  factory WishlistItem.fromJson(Map<String, dynamic> json) {
-    return WishlistItem(
-      id: json['id'],
-      name: json['name'],
-      brand: json['brand'],
-      price: json['price'].toDouble(),
-      image: json['image'],
-      slug: json['slug'],
+    factory Wishlist.fromJson(Map<String, dynamic> json) => Wishlist(
+        id: json["id"],
+        name: json["name"],
+        brand: json["brand"],
+        price: json["price"],
+        image: json["image"],
+        slug: json["slug"],
     );
-  }
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "brand": brand,
         "price": price,
         "image": image,
         "slug": slug,
-      };
+    };
 }
