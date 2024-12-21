@@ -182,13 +182,6 @@ class _SneakerEntryState extends State<SneakerEntry> {
           shrinkWrap: true,
           children: [
             ListTile(
-              title: const Text('Default'),
-              onTap: () {
-                sortSneakers('Default');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
               title: const Text('Price: Low to High'),
               onTap: () {
                 sortSneakers('Price: Low to High');

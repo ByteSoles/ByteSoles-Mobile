@@ -140,39 +140,104 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// Widget untuk daftar fitur di home screen
+ 
   Widget _buildHomeScreenList(BuildContext context) {
-    final List<Map<String, dynamic>> items = [
+    final List<Map<String, dynamic>> features = [
       {
         'title': 'Catalog',
+        'description': 'Browse our extensive collection of sneakers.',
+        'icon': Icons.search,
         'onTap': () => Navigator.pushNamed(context, AppRoutes.catalogProductsScreen),
       },
       {
         'title': 'Wishlist',
+        'description': 'Save your favorite sneakers for later.',
+        'icon': Icons.favorite_border,
         'onTap': () => ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Wishlist page coming soon!')),
             ),
       },
       {
         'title': 'Cart',
-        'onTap': () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Cart page coming soon!')),
+        'description': 'Manage your selected items and checkout.',
+        'icon': Icons.shopping_cart,
+        'onTap': () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const KeranjangPage()),
             ),
       },
     ];
 
-    return ListView.separated(
-      padding: EdgeInsets.zero,
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      separatorBuilder: (context, index) => const SizedBox(height: 36),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return _buildFeatureItem(
-          title: items[index]['title'],
-          onTap: items[index]['onTap'],
+    return Column(
+      children: features.map((feature) {
+        return GestureDetector(
+          onTap: feature['onTap'],
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              image: const DecorationImage(
+                image: AssetImage('assets/images/bg_catalog.png'),
+                fit: BoxFit.cover,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+
+                    color: Colors.black.withOpacity(0.8), 
+                  ),
+                ),
+                // Centered content
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          feature['icon'],
+                          size: 50,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          feature['title'],
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          feature['description'],
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
-      },
+      }).toList(),
     );
   }
 

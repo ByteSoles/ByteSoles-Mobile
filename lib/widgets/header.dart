@@ -22,13 +22,10 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       leading: _buildMenuButton(context),
       centerTitle: true,
-      title: const Text(
-        'Bytesoles',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
+      title:Image.asset(
+        'assets/images/logo.png',
+        height: 105,
+        fit: BoxFit.contain,
       ),
       actions: [
         Padding(
