@@ -116,6 +116,45 @@ class _SneakerDetailState extends State<SneakerDetail> {
     }
   }
 
+  Future<void> addToWishlist(int productId) async {
+    final request = context.read<CookieRequest>();
+    if (!request.loggedIn) {
+      _showLoginPopup(context);
+      return;
+    }
+
+    try {
+      final response = await request.post(
+        'http://localhost:8000/wishlist/add-flutter/',
+        {
+          'user': request.jsonData['user_id'].toString(),
+          'product_id': productId.toString(),
+        },
+      );
+
+      if (response['status'] == 'success') {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Berhasil menambahkan ke wishlist")),
+          );
+          Navigator.pushNamed(context, AppRoutes.wishlist);
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(response['message'])),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Gagal menambahkan ke wishlist")),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -278,7 +317,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                                   );
                                 }
                               } catch (e) {
-                                print('Error adding to cart: $e'); // Debug print
+                                print(
+                                    'Error adding to cart: $e'); // Debug print
                                 if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -303,7 +343,9 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           const SizedBox(height: 10),
                           // Add to Wishlist Button
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              addToWishlist(widget.sneakerId);
+                            },
                             icon: const Icon(Icons.favorite_border),
                             label: const Text('Add to Wishlist'),
                             style: ElevatedButton.styleFrom(

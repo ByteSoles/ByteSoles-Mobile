@@ -8,9 +8,10 @@ import 'screens/register.dart';
 import 'userprofile/screens/profile_screen.dart';
 import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
 import 'package:bytesoles/catalog/screens/sneaker_detail.dart';
-import 'package:bytesoles/catalog/screens/sneaker_entry.dart'; 
+import 'package:bytesoles/catalog/screens/sneaker_entry.dart';
 import 'package:bytesoles/keranjang/screens/keranjang_page.dart';
 import 'package:bytesoles/keranjang/screens/checkout_page.dart';
+import 'package:bytesoles/wishlist/screens/wishlist_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,8 +40,10 @@ class MyApp extends StatelessWidget {
           AppRoutes.catalogProductsScreen: (context) => const SneakerEntry(),
           AppRoutes.keranjangPage: (context) => const KeranjangPage(),
           AppRoutes.checkoutPage: (context) => const CheckoutSuccessPage(),
+          AppRoutes.wishlist: (context) => const WishlistScreen(),
         },
       ),
     );
   }
+  // test mengetik dengan sebuah laptop daming yovan
 }

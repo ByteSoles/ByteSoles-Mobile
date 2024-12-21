@@ -1,5 +1,7 @@
 import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
 
 class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onMenuPressed;
@@ -50,7 +52,8 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: onLoginPressed,
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   ),
                   child: const Text(
                     'Login/Register',
@@ -79,9 +82,33 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
             Navigator.pushNamed(context, AppRoutes.home);
             break;
           case 'Wishlist':
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Wishlist page coming soon!')),
-            );
+            final request = context.read<CookieRequest>();
+            if (request.loggedIn) {
+              Navigator.pushNamed(context, AppRoutes.wishlist);
+            } else {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Login Required'),
+                    content: const Text('Please login to access your wishlist'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, AppRoutes.login);
+                        },
+                        child: const Text('Login'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
             break;
           case 'Buy More':
             Navigator.pushNamed(context, AppRoutes.catalogProductsScreen);

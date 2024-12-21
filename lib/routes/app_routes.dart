@@ -17,17 +17,17 @@ class AppRoutes {
   static const String splashScreenOneScreen = '/splash_screen_one_screen';
   static const String splashScreenTwoScreen = '/splash_screen_two_screen';
   static const String splashScreenThreeScreen = '/splash_screen_three_screen';
-  
+
   static const String signInScreen = '/sign_in_screen';
   static const String signUpScreen = '/sign_up_screen';
-  
+
   static const String homescreenScreen = '/homescreen_screen';
   static const String catalogProductsScreen = '/catalog-products';
-  
+
   static const String detailProductScreen = '/detail_product_screen';
   static const String detailProductOneScreen = '/detail_product_one_screen';
   static const String detailProductInitialPage = '/detail_product_initial_page';
-  
+
   // static const String appNavigationScreen = '/app_navigation_screen';
   static const String initialRoute = '/initialRoute';
 
@@ -36,8 +36,10 @@ class AppRoutes {
   static const String register = '/register';
 
   static const String profile = '/profile';
-  static const String keranjangPage= '/keranjang';
+  static const String keranjangPage = '/keranjang';
   static const String checkoutPage = '/checkout';
+
+  static const String wishlist = '/wishlist';
 
   // Route definitions
   // static Map<String, WidgetBuilder> routes = {
@@ -46,17 +48,16 @@ class AppRoutes {
   //   splashScreenOneScreen: (context) => SplashScreenOneScreen(),
   //   splashScreenTwoScreen: (context) => SplashScreenTwoScreen(),
   //   splashScreenThreeScreen: (context) => SplashScreenThreeScreen(),
-    
+
   //   signInScreen: (context) => SignInScreen(),
   //   signUpScreen: (context) => SignUpScreen(),
-    
+
   //   homescreenScreen: (context) => HomescreenScreen(),
   //   catalogProductsScreen: (context) => CatalogProductsScreen(),
-    
+
   //   detailProductScreen: (context) => DetailProductScreen(),
   //   detailProductOneScreen: (context) => DetailProductOneScreen(),
-    
-    // appNavigationScreen: (context) => AppNavigationScreen(),
+
+  // appNavigationScreen: (context) => AppNavigationScreen(),
   // };
 }
-

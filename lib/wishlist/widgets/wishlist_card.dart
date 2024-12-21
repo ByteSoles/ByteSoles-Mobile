@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import '../models/wishlist.dart';
+import '../models/wishlist_item.dart';
 
 class WishlistCard extends StatelessWidget {
-  final Wishlist wishlist;
-  
+  final WishlistItem wishlist;
+  final Function(int) onRemove;
+
   const WishlistCard({
     super.key,
     required this.wishlist,
+    required this.onRemove,
   });
 
   @override
@@ -32,7 +34,7 @@ class WishlistCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
+
             // Nama Produk
             Text(
               wishlist.name,
@@ -46,7 +48,7 @@ class WishlistCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
-            
+
             // Brand
             Text(
               wishlist.brand,
@@ -57,7 +59,7 @@ class WishlistCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             // Harga
             Text(
               '\$${wishlist.price}',
@@ -68,15 +70,15 @@ class WishlistCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Tombol Hapus
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
+              child: TextButton(
+                onPressed: () => onRemove(wishlist.id),
+                style: TextButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -84,11 +86,8 @@ class WishlistCard extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  'Hapus dari Wishlist',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w600,
-                  ),
+                  'Remove from Wishlist',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
