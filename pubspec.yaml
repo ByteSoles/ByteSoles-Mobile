@@ -115,4 +115,9 @@ flutter:
     - assets/images/hp1.jpg
     - assets/images/hp2.jpg
     - assets/images/hp3.jpg
+    - assets/img/bca.png
+    - assets/img/bni.png
+    - assets/img/mandiri.png
+    - assets/img/bri.png
+    - assets/img/cimb.png
 

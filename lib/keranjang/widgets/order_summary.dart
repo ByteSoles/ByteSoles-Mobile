@@ -32,7 +32,7 @@ class _OrderSummaryState extends State<OrderSummary> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: const Color.fromARGB(118, 221, 224, 216),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -81,11 +81,76 @@ class _OrderSummaryState extends State<OrderSummary> {
               labelText: 'Payment Method',
             ),
             items: const [
-              DropdownMenuItem(value: 'BCA', child: Text('BCA')),
-              DropdownMenuItem(value: 'BNI', child: Text('BNI')),
-              DropdownMenuItem(value: 'Mandiri', child: Text('Mandiri')),
-              DropdownMenuItem(value: 'BRI', child: Text('BRI')),
-              DropdownMenuItem(value: 'CIMB', child: Text('CIMB')),
+              DropdownMenuItem(
+                value: 'BCA',
+                child: Row(
+                  children: [
+                    Image(
+                      image: AssetImage('assets/img/bca.png'),
+                      width: 30,
+                      height: 30,
+                    ),
+                    SizedBox(width: 10),
+                    Text('BCA'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'BNI',
+                child: Row(
+                  children: [
+                    Image(
+                      image: AssetImage('assets/img/bni.png'),
+                      width: 30,
+                      height: 30,
+                    ),
+                    SizedBox(width: 10),
+                    Text('BNI'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Mandiri',
+                child: Row(
+                  children: [
+                    Image(
+                      image: AssetImage('assets/img/mandiri.png'),
+                      width: 30,
+                      height: 30,
+                    ),
+                    SizedBox(width: 10),
+                    Text('Mandiri'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'BRI',
+                child: Row(
+                  children: [
+                    Image(
+                      image: AssetImage('assets/img/bri.png'),
+                      width: 30,
+                      height: 30,
+                    ),
+                    SizedBox(width: 10),
+                    Text('BRI'),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'CIMB',
+                child: Row(
+                  children: [
+                    Image(
+                      image: AssetImage('assets/img/cimb.png'),
+                      width: 30,
+                      height: 30,
+                    ),
+                    SizedBox(width: 10),
+                    Text('CIMB'),
+                  ],
+                ),
+              ),
             ],
             onChanged: (value) {},
           ),
@@ -104,6 +169,7 @@ class _OrderSummaryState extends State<OrderSummary> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               child: const Text('Checkout'),

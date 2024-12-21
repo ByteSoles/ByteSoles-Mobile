@@ -166,11 +166,40 @@ class _HomePageState extends State<HomePage> {
       {
         'title': 'Cart',
         'onTap': () {
-          Navigator.pushNamed(context, AppRoutes.keranjangPage);
-          // Sementara hanya tampilkan snackbar
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Cart page coming soon!')),
-          );
+          final request = context.read<CookieRequest>();
+          if (request.loggedIn) {
+            // Jika sudah login, bisa akses keranjang
+            Navigator.pushNamed(context, AppRoutes.keranjangPage);
+          } else {
+            // Jika belum login, tampilkan dialog untuk login
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Login Required'),
+                  content: const Text('Please login to access your cart'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Tutup dialog
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Tutup dialog
+                        Navigator.pushNamed(context, AppRoutes.login); // Navigasi ke halaman login
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blue,
+                      ),
+                      child: const Text('Login'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         },
       },
     ];
