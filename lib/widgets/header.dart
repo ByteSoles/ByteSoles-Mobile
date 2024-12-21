@@ -47,7 +47,9 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 )
               : TextButton(
-                  onPressed: onLoginPressed,
+                  onPressed: onLoginPressed?? () {
+                    Navigator.pushNamed(context, AppRoutes.login);
+                  },
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

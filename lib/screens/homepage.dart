@@ -1,3 +1,4 @@
+import 'package:bytesoles/keranjang/screens/keranjang_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -46,16 +47,7 @@ class _HomePageState extends State<HomePage> {
         appBar: CustomHeader(
           isLoggedIn: isLoggedIn,
           onMenuPressed: () => Scaffold.of(context).openDrawer(),
-          onLoginPressed: () {
-            if (isLoggedIn) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              );
-            } else {
-              Navigator.pushNamed(context, AppRoutes.login);
-            }
-          },
+          onLoginPressed: () => Navigator.pushNamed(context, AppRoutes.login),
         ),
         body: SingleChildScrollView(
           child: Column(

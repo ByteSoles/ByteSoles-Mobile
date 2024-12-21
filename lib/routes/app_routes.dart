@@ -36,6 +36,8 @@ class AppRoutes {
   static const String register = '/register';
 
   static const String profile = '/profile';
+  static const String keranjangPage= '/cart_service';
+  static const String checkoutPage = '/checkout';
 
   // Route definitions
   // static Map<String, WidgetBuilder> routes = {

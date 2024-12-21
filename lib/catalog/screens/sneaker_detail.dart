@@ -1,3 +1,4 @@
+import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,7 @@ import 'package:bytesoles/catalog/models/sneaker.dart';
 import 'package:bytesoles/catalog/widgets/recently_viewed.dart';
 import 'package:bytesoles/widgets/header.dart';
 import 'package:bytesoles/widgets/footer.dart';
+// import 'package:bytesoles/keranjang/widgets/cart_item_card.dart';
 
 class SneakerDetail extends StatefulWidget {
   final int sneakerId;
@@ -35,7 +37,6 @@ class _SneakerDetailState extends State<SneakerDetail> {
         await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
     return Sneaker.fromJson(response);
   }
-
   Future<List<Sneaker>> fetchRecentlyViewed() async {
     final request = context.read<CookieRequest>();
     final recentIds = await RecentlyViewedManager.getItems();
@@ -55,6 +56,33 @@ class _SneakerDetailState extends State<SneakerDetail> {
     }
     return sneakers;
   }
+
+  void _showLoginPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Login Required'),
+        content: const Text('You need to be logged in to access this feature.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.pushNamed(context, AppRoutes.login);
+            },
+            child: const Text('Login'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   Future<void> clearRecentlyViewed() async {
     bool? confirm = await showDialog<bool>(
@@ -89,9 +117,13 @@ class _SneakerDetailState extends State<SneakerDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: CustomHeader(
-      onMenuPressed: () => Scaffold.of(context).openDrawer(),
-    ),
+      appBar: CustomHeader(
+        isLoggedIn: context.read<CookieRequest>().loggedIn,
+        onMenuPressed: () => Scaffold.of(context).openDrawer(),
+        onLoginPressed: () {
+          Navigator.pushNamed(context, '/login');
+        },
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -195,7 +227,15 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           const SizedBox(height: 20),
                           // Add to Cart Button
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: (){
+                              final request = context.read<CookieRequest>();
+
+                              if (request.loggedIn) {
+                                Navigator.pushNamed(context, AppRoutes.keranjangPage);
+                              } else {
+                                _showLoginPopup(context);
+                              }
+                            },
                             icon: const Icon(Icons.shopping_cart),
                             label: const Text('Add to Cart'),
                             style: ElevatedButton.styleFrom(
@@ -223,7 +263,15 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           const SizedBox(height: 10),
                           // Reviews Button
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: (){
+                              final request = context.read<CookieRequest>();
+
+                              if (request.loggedIn) {
+                                Navigator.pushNamed(context, AppRoutes.keranjangPage);
+                              } else {
+                                _showLoginPopup(context);
+                              }
+                            },
                             icon: const Icon(Icons.rate_review),
                             label: const Text('Reviews'),
                             style: ElevatedButton.styleFrom(

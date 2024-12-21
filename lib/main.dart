@@ -1,3 +1,5 @@
+// import 'package:bytesoles/keranjang/widgets/cart_item_card.dart';
+import 'package:bytesoles/keranjang/screens/cart_setvice.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -7,6 +9,8 @@ import 'screens/login.dart';
 import 'screens/register.dart';
 import 'userprofile/screens/profile_screen.dart';
 import 'package:bytesoles/catalog/screens/sneaker_entry.dart'; // Ganti dengan path file `SneakerEntry` Anda
+import 'package:bytesoles/keranjang/screens/keranjang_page.dart';
+import 'package:bytesoles/keranjang/screens/checkout_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,10 +37,12 @@ class MyApp extends StatelessWidget {
           AppRoutes.register: (context) => const RegisterPage(),
           AppRoutes.profile: (context) => const ProfileScreen(),
           AppRoutes.catalogProductsScreen: (context) => const SneakerEntry(),
+          AppRoutes.keranjangPage: (context) => const KeranjangPage(),
+          // AppRoutes.checkoutPage: (context) => addToCart(),
+
           // Tambahkan route lainnya jika diperlukan
         },
       ),
     );
   }
 }
-
