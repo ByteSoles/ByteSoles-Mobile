@@ -66,7 +66,7 @@ class _CommentSectionState extends State<CommentSection> {
     try {
       final request = context.read<CookieRequest>();
 
-      // Debug prints
+      // Debug prints nyerah dulu bang
       print("=== Flutter Debug Info ===");
       print('Login status: ${request.loggedIn}');
       print('Cookies: ${request.cookies}');
