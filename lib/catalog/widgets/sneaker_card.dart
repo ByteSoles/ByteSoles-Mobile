@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bytesoles/catalog/models/sneaker.dart';
-import 'package:bytesoles/catalog/screens/sneaker_detail.dart';
+import 'package:bytesoles/detail_product/screens/sneaker_detail.dart';
 
 class SneakerCard extends StatelessWidget {
   final Sneaker sneaker;

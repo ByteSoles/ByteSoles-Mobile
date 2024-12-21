@@ -1,11 +1,13 @@
+import 'package:bytesoles/detail_product/widgets/comment_section.dart';
 import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:bytesoles/catalog/models/sneaker.dart';
-import 'package:bytesoles/catalog/widgets/recently_viewed.dart';
+import 'package:bytesoles/detail_product/widgets/recently_viewed.dart';
 import 'package:bytesoles/widgets/header.dart';
 import 'package:bytesoles/widgets/footer.dart';
+import 'package:bytesoles/detail_product/models/details.dart';
 
 class SneakerDetail extends StatefulWidget {
   final int sneakerId;
@@ -17,30 +19,33 @@ class SneakerDetail extends StatefulWidget {
 }
 
 class _SneakerDetailState extends State<SneakerDetail> {
-  late Future<Sneaker> futureSneaker;
-  late Future<List<Sneaker>> futureRecentlyViewed;
+  late Future<ProductDetails> futureSneaker;
+  late Future<List<ProductDetails>> futureRecentlyViewed;
 
   @override
   void initState() {
     super.initState();
     futureSneaker = fetchSneaker(widget.sneakerId);
     // Add current sneaker to recently viewed
-    RecentlyViewedManager.addItem(widget.sneakerId);
-    // Fetch recently viewed sneakers
-    futureRecentlyViewed = fetchRecentlyViewed();
+    RecentlyViewedManager.addItem(widget.sneakerId).then((_) {
+      // Fetch recently viewed only after ensuring current ID is added
+      setState(() {
+        futureRecentlyViewed = fetchRecentlyViewed();
+      });
+    });
   }
 
-  Future<Sneaker> fetchSneaker(int id) async {
+  Future<ProductDetails> fetchSneaker(int id) async {
     final request = context.read<CookieRequest>();
     final response =
         await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
-    return Sneaker.fromJson(response);
+    return ProductDetails.fromJson(response);
   }
 
-  Future<List<Sneaker>> fetchRecentlyViewed() async {
+  Future<List<ProductDetails>> fetchRecentlyViewed() async {
     final request = context.read<CookieRequest>();
     final recentIds = await RecentlyViewedManager.getItems();
-    List<Sneaker> sneakers = [];
+    List<ProductDetails> sneakers = [];
 
     // Remove current sneaker from the list
     recentIds.remove(widget.sneakerId);
@@ -49,7 +54,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
       try {
         final response =
             await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
-        sneakers.add(Sneaker.fromJson(response));
+        sneakers.add(ProductDetails.fromJson(response));
       } catch (e) {
         print('Error fetching sneaker $id: $e');
       }
@@ -90,14 +95,18 @@ class _SneakerDetailState extends State<SneakerDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: CustomHeader(
-      onMenuPressed: () => Scaffold.of(context).openDrawer(),
-    ),
+      appBar: CustomHeader(
+        isLoggedIn: context.read<CookieRequest>().loggedIn,
+        onMenuPressed: () => Scaffold.of(context).openDrawer(),
+        onLoginPressed: () {
+          Navigator.pushNamed(context, '/login');
+        },
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Existing FutureBuilder for main sneaker details
-            FutureBuilder<Sneaker>(
+            FutureBuilder<ProductDetails>(
               future: futureSneaker,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -108,7 +117,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
                   return const Center(
                       child: Text('No sneaker details available.'));
                 } else {
-                  Sneaker sneaker = snapshot.data!;
+                  ProductDetails sneaker = snapshot.data!;
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
@@ -198,7 +207,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           ElevatedButton.icon(
                             onPressed: () {
                               // Navigasi ke halaman keranjang
-                              Navigator.pushNamed(context, AppRoutes.keranjangPage);
+                              Navigator.pushNamed(
+                                  context, AppRoutes.keranjangPage);
                             },
                             icon: const Icon(Icons.shopping_cart),
                             label: const Text('Add to Cart'),
@@ -238,6 +248,10 @@ class _SneakerDetailState extends State<SneakerDetail> {
                                   borderRadius: BorderRadius.circular(8)),
                             ),
                           ),
+                          CommentSection(
+                            productSlug: sneaker.fields
+                                .slug, // Make sure your ProductDetails model includes the slug field
+                          ),
                         ],
                       ),
                     ),
@@ -269,7 +283,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
             const SizedBox(height: 16),
             SizedBox(
               height: 200,
-              child: FutureBuilder<List<Sneaker>>(
+              child: FutureBuilder<List<ProductDetails>>(
                 future: futureRecentlyViewed,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -355,6 +369,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
               ),
             ),
             const SizedBox(height: 20),
+
             CustomFooter(),
           ],
         ),
