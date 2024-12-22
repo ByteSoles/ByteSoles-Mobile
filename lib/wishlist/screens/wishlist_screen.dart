@@ -1,164 +1,312 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import '../../widgets/header.dart';
+import '../models/wishlist.dart';
+import '../widgets/wishlist_card.dart';
+import '../../routes/app_routes.dart';
 
 class WishlistScreen extends StatefulWidget {
-  const WishlistScreen({Key? key}) : super(key: key);
+  const WishlistScreen({super.key});
 
   @override
   State<WishlistScreen> createState() => _WishlistScreenState();
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
-  // Simulasi data wishlist
-  List<String> wishlistItems = []; // Kosong saat belum ada data
+  String _selectedBrand = 'All';
+  String _selectedSort = 'Recently Added';
+  final List<String> _brands = ['All', 'Nike', 'adidas', 'Jordan', 'Crocs', 'New Balance', 'MSCHF', 'Puma'];
+  final List<String> _sortOptions = ['Recently Added', 'Oldest First'];
+
+  List<Wishlist> _filterAndSortWishlist(List<Wishlist> items) {
+    var filteredItems = items.where((item) {
+      return _selectedBrand == 'All' || item.brand == _selectedBrand;
+    }).toList();
+
+    // Sort items
+    if (_selectedSort == 'Recently Added') {
+      filteredItems = filteredItems.reversed.toList();
+    }
+
+    return filteredItems;
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'My Wishlist',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Montserrat',
+            ),
+          ),
+          Row(
+            children: [
+              // Sort Button
+              Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                elevation: 2,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        MediaQuery.of(context).size.width - 160,
+                        kToolbarHeight + 80,
+                        16,
+                        0,
+                      ),
+                      items: _sortOptions.map((String option) {
+                        return PopupMenuItem<String>(
+                          value: option,
+                          child: Text(
+                            option,
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 14,
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _selectedSort = option;
+                            });
+                          },
+                        );
+                      }).toList(),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.sort, size: 20),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Sort',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 14,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Filter Button
+              Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                elevation: 2,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        MediaQuery.of(context).size.width - 80,
+                        kToolbarHeight + 80,
+                        16,
+                        0,
+                      ),
+                      items: _brands.map((String brand) {
+                        return PopupMenuItem<String>(
+                          value: brand,
+                          child: Text(
+                            brand,
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 14,
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _selectedBrand = brand;
+                            });
+                          },
+                        );
+                      }).toList(),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.filter_list, size: 20),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Filter',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 14,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<List<Wishlist>> fetchWishlist() async {
+    final request = context.read<CookieRequest>();
+    try {
+      final response = await request.get('http://localhost:8000/wishlist/json/');
+      List<Wishlist> wishlistItems = [];
+      
+      for (var item in response) {
+        wishlistItems.add(Wishlist.fromJson(item));
+      }
+      
+      return wishlistItems;
+    } catch (e) {
+      throw Exception('Gagal mengambil data wishlist: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDFDFD),
-      appBar: AppBar(
-        title: const Text(
-          'Bytesoles',
-          style: TextStyle(
-            color: Color(0xFF161616),
-            fontSize: 18,
-            fontFamily: 'Madimi One',
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
+      appBar: CustomHeader(
+        isLoggedIn: context.read<CookieRequest>().loggedIn,
+        onMenuPressed: () => Scaffold.of(context).openDrawer(),
+        onLoginPressed: () => Navigator.pushNamed(context, AppRoutes.login),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Bagian header yang tetap ada
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: context.read<CookieRequest>().loggedIn 
+        ? Column(
+            children: [
+              _buildHeader(),
+              Expanded(
+                child: FutureBuilder<List<Wishlist>>(
+                  future: fetchWishlist(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'Error: ${snapshot.error}',
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      );
+                    }
+                    
+                    final wishlistItems = _filterAndSortWishlist(snapshot.data ?? []);
+                    
+                    if (wishlistItems.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Wishlist Anda masih kosong',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pushNamed(
+                                context, 
+                                AppRoutes.catalogProductsScreen
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                'Catalog',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(16),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.7,
+                        crossAxisSpacing: 13,
+                        mainAxisSpacing: 13,
+                      ),
+                      itemCount: wishlistItems.length,
+                      itemBuilder: (context, index) {
+                        return WishlistCard(
+                          wishlist: wishlistItems[index],
+                          onRemove: () => setState(() {}),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
+        : Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  wishlistItems.isEmpty ? '0 Items' : '${wishlistItems.length} Items',
-                  style: const TextStyle(
+                const Text(
+                  'Silakan login untuk melihat wishlist Anda',
+                  style: TextStyle(
+                    color: Colors.black,
                     fontSize: 16,
                     fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (wishlistItems.isNotEmpty)
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.sort, color: Colors.black),
-                        onPressed: () {
-                          // TODO: Tambahkan logika sorting
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.filter_list, color: Colors.black),
-                        onPressed: () {
-                          // TODO: Tambahkan logika filter
-                        },
-                      ),
-                    ],
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, AppRoutes.login),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
                   ),
+                  child: const Text('Login'),
+                ),
               ],
             ),
           ),
-
-          // Konten utama
-          Expanded(
-            child: wishlistItems.isEmpty
-                ? _buildEmptyWishlist(context)
-                : _buildWishlistWithItems(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Widget untuk menampilkan wishlist kosong
-  Widget _buildEmptyWishlist(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.favorite_border,
-            size: 100,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Your Wishlist is Empty',
-            style: TextStyle(
-              fontSize: 24,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-              'Login to save your favorite items and create your wishlist',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 16,
-                fontFamily: 'Montserrat',
-              ),
-            ),
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton(
-            onPressed: () {
-              // TODO: Navigasi ke halaman katalog
-              Navigator.pop(context); // Sementara hanya kembali
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-                vertical: 16,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: const Text(
-              'Browse Catalog',
-              style: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Widget untuk menampilkan wishlist dengan item
-  Widget _buildWishlistWithItems() {
-    return ListView.builder(
-      itemCount: wishlistItems.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: const Icon(Icons.favorite, color: Colors.red),
-          title: Text(wishlistItems[index]),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete, color: Colors.grey),
-            onPressed: () {
-              setState(() {
-                wishlistItems.removeAt(index); // Hapus item dari wishlist
-              });
-            },
-          ),
-        );
-      },
     );
   }
 }

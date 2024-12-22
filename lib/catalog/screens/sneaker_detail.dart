@@ -303,7 +303,62 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           const SizedBox(height: 10),
                           // Add to Wishlist Button
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final request = context.read<CookieRequest>();
+                              
+                              if (!request.loggedIn) {
+                                _showLoginPopup(context);
+                                return;
+                              }
+
+                              try {
+                                final response = await request.post(
+                                  "http://localhost:8000/wishlist/add-to-wishlist-flutter/",
+                                  {
+                                    'user': request.jsonData['user_id'].toString(),
+                                    'sneaker': widget.sneakerId.toString(),
+                                  },
+                                );
+
+                                if (!context.mounted) return;
+
+                                if (response['status'] == 'success') {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Berhasil menambahkan ke wishlist!',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      backgroundColor: Colors.black,
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                  Navigator.pushNamed(context, AppRoutes.wishlistScreen);
+                                } else {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Gagal menambahkan ke wishlist: ${response['message']}',
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                      backgroundColor: Colors.black,
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Terjadi kesalahan: $e'),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
                             icon: const Icon(Icons.favorite_border),
                             label: const Text('Add to Wishlist'),
                             style: ElevatedButton.styleFrom(
@@ -311,7 +366,8 @@ class _SneakerDetailState extends State<SneakerDetail> {
                               foregroundColor: Colors.white,
                               minimumSize: const Size.fromHeight(50),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),

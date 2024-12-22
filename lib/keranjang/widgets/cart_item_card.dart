@@ -30,8 +30,11 @@ class CartItemCard extends StatelessWidget {
         onRefresh(); // Refresh cart data
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Jumlah berhasil diperbarui'),
-            backgroundColor: Colors.green,
+            content: Text(
+              'Jumlah berhasil diperbarui',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.black,
           ),
         );
       }
@@ -164,8 +167,11 @@ class CartItemCard extends StatelessWidget {
                           if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Item berhasil dihapus'),
-                              backgroundColor: Colors.green,
+                              content: Text(
+                                'Item berhasil dihapus',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.black,
                             ),
                           );
                         }

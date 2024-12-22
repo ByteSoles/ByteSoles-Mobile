@@ -22,12 +22,16 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       leading: _buildMenuButton(context),
       centerTitle: true,
-      title: const Text(
-        'Bytesoles',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+      title: GestureDetector(
+        onTap: () => Navigator.pushNamed(context, AppRoutes.home),
+        child: const Text(
+          'ByteSoles',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Montserrat',
+          ),
         ),
       ),
       actions: [

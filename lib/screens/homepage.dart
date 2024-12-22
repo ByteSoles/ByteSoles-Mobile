@@ -1,4 +1,3 @@
-import 'package:bytesoles/keranjang/screens/keranjang_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -81,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                 child: _buildHomeScreenList(context),
               ),
               const SizedBox(height: 20),
-              CustomFooter(),
+              const CustomFooter(),
             ],
           ),
         ),
@@ -135,7 +134,7 @@ class _HomePageState extends State<HomePage> {
           child: AnimatedSmoothIndicator(
             activeIndex: sliderIndex,
             count: imageAssets.length,
-            effect: ScrollingDotsEffect(
+            effect: const ScrollingDotsEffect(
               spacing: 8.0,
               activeDotColor: Colors.black,
               dotColor: Colors.grey,
@@ -157,11 +156,41 @@ class _HomePageState extends State<HomePage> {
         'onTap': () => Navigator.pushNamed(context, AppRoutes.catalogProductsScreen),
       },
       {
-        
         'title': 'Wishlist',
-        'onTap': () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Wishlist page coming soon!')),
-            ),
+        'onTap': () {
+          final request = context.read<CookieRequest>();
+          if (request.loggedIn) {
+            Navigator.pushNamed(context, AppRoutes.wishlistScreen);
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Login Required'),
+                  content: const Text('Please login to access your wishlist'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Tutup dialog
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Tutup dialog
+                        Navigator.pushNamed(context, AppRoutes.login); // Navigasi ke halaman login
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blue,
+                      ),
+                      child: const Text('Login'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
       },
       {
         'title': 'Cart',

@@ -39,6 +39,9 @@ class AppRoutes {
   static const String keranjangPage= '/keranjang';
   static const String checkoutPage = '/checkout';
 
+  static const String wishlistScreen = '/wishlist';
+  static const String catalog = '/catalog';
+
   // Route definitions
   // static Map<String, WidgetBuilder> routes = {
   //   initialRoute: (context) => SplashScreen(),
