@@ -9,12 +9,12 @@ List<Wishlist> wishlistFromJson(String str) => List<Wishlist>.from(json.decode(s
 String wishlistToJson(List<Wishlist> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Wishlist {
-    int id;
-    String name;
-    String brand;
-    String price;
-    String image;
-    String slug;
+    final int id;
+    final String name;
+    final String brand;
+    final String price;
+    final String image;
+    final String slug;
 
     Wishlist({
         required this.id,
@@ -29,7 +29,7 @@ class Wishlist {
         id: json["id"],
         name: json["name"],
         brand: json["brand"],
-        price: json["price"],
+        price: json["price"].toString(),
         image: json["image"],
         slug: json["slug"],
     );

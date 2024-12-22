@@ -36,6 +36,12 @@ class AppRoutes {
   static const String register = '/register';
 
   static const String profile = '/profile';
+  static const String keranjangPage= '/keranjang';
+  static const String checkoutPage = '/checkout';
+
+  static const String wishlistScreen = '/wishlist';
+  static const String catalog = '/catalog';
+
   
   static const String reviewPage = '/review-page';
 

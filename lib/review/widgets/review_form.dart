@@ -4,6 +4,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+
+Future<void> addReviewDjango({
+  required String sneakerSlug,
+  required String reviewDescription,
+  required int score,
+}) async {
+  try {
+    final url = Uri.parse('YOUR_BASE_URL/review/$sneakerSlug/add/');
+    
+    // Make sure to include your authentication token in headers
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: {
+        'review_description': reviewDescription,
+        'score': score.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Review added successfully
+      print('Review added successfully');
+    } else {
+      throw Exception('Failed to add review: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error adding review: $e');
+    rethrow;
+  }
+}
 
 Future<void> addReview(BuildContext context, int initialScore, Sneaker sneaker) async {
   double screenWidth = MediaQuery.of(context).size.width;
@@ -100,12 +134,27 @@ Future<void> addReview(BuildContext context, int initialScore, Sneaker sneaker) 
           // Submit button
           ElevatedButton(
             onPressed: () async {
-              await request.post('http://127.0.0.1:8000/review/add-review-ajax/${sneaker.fields.slug}/', {
-                'score': score,
-                'review_description': reviewDescription,
-              });
-              Navigator.pushReplacement(context, 
-                MaterialPageRoute(builder: (context) => ReviewPage(sneaker: sneaker)));
+              try {
+                await addReviewDjango(
+                  sneakerSlug: sneaker.fields.slug,
+                  reviewDescription: reviewDescription,
+                  score: score,
+                );
+                  // Show success message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Review added successfully!')),
+                );
+                  // Navigate back to review page
+                Navigator.pushReplacement(
+                  context, 
+                  MaterialPageRoute(builder: (context) => ReviewPage(sneaker: sneaker))
+                );
+              } catch (e) {
+                // Show error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error adding review: $e')),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
