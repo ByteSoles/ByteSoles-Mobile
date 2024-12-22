@@ -12,6 +12,8 @@ import 'package:bytesoles/keranjang/screens/checkout_page.dart';
 import 'package:bytesoles/catalog/screens/sneaker_detail.dart';
 import 'package:bytesoles/wishlist/screens/wishlist_screen.dart';
 
+import 'package:bytesoles/catalog/screens/sneaker_entry.dart'; // Ganti dengan path file `SneakerEntry` Anda
+import 'package:bytesoles/review/screens/review_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,7 +52,14 @@ class MyApp extends StatelessWidget {
           }
           return null;
         },
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.brown,
+          ).copyWith(secondary: Colors.brown[400]),
+        ),
+        home: ReviewPage(),
       ),
     );
   }
 }
+
+
