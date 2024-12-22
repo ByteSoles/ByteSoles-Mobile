@@ -108,3 +108,6 @@ https://www.figma.com/design/sgLjXBVX3kB6RvRWW7lSgg/eCommerce-App-UI-Kit---Case-
 
 ### LINK VIDIO
 ristek.link/DEMOTKPBPC13
+
+### LINK APLIKASI
+https://install.appcenter.ms/orgs/pbp-c-13-bytesoles/apps/bytesoles/distribution_groups/public
