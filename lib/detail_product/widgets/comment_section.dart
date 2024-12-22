@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class CommentSection extends StatefulWidget {
   final String productSlug;
@@ -31,6 +32,8 @@ class _CommentSectionState extends State<CommentSection> {
     setState(() => _isLoading = true);
     try {
       final request = context.read<CookieRequest>();
+      print("@@@@@@@");
+      print("Cookies: ${request.loggedIn}");
       final response = await request.get(
           'http://127.0.0.1:8000/detail_product/product/${widget.productSlug}/comments/');
 
@@ -66,39 +69,24 @@ class _CommentSectionState extends State<CommentSection> {
     try {
       final request = context.read<CookieRequest>();
 
-      // Debug prints nyerah dulu bang
-      print("=== Flutter Debug Info ===");
-      print('Login status: ${request.loggedIn}');
-      print('Cookies: ${request.cookies}');
-      print('Headers: ${request.headers}');
-      print("=========================");
-
-      if (!request.loggedIn) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please log in to comment')),
-        );
-        return;
-      }
-
-      final response = await request.post(
+      // Send the data as JSON properly formatted
+      final response = await request.postJson(
         'http://127.0.0.1:8000/detail_product/product/${widget.productSlug}/add_comment/',
-        {
+        jsonEncode({
           'content': _commentController.text,
-        },
+        }),
       );
 
       print('Response from server: $response');
 
-      if (response is Map<String, dynamic>) {
-        if (response['status'] == 'success') {
-          _commentController.clear();
-          await _loadComments();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Comment added successfully')),
-          );
-        } else {
-          throw Exception(response['message'] ?? 'Unknown error');
-        }
+      if (response['status'] == 'success') {
+        _commentController.clear();
+        await _loadComments();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Comment added successfully')),
+        );
+      } else {
+        throw Exception(response['message'] ?? 'Unknown error');
       }
     } catch (e) {
       print('Error details: $e');

@@ -29,7 +29,8 @@ class _SneakerEntryState extends State<SneakerEntry> {
   }
 
   Future<void> fetchSneakers(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/catalog/view-json/');
+    final response =
+        await request.get('http://127.0.0.1:8000/catalog/view-json/');
     List<Sneaker> sneakers = [];
     for (var d in response) {
       if (d != null) {
@@ -55,7 +56,8 @@ class _SneakerEntryState extends State<SneakerEntry> {
       if (brand == 'All') {
         displayedSneakers = List.from(allSneakers);
       } else {
-        displayedSneakers = allSneakers.where((s) => s.fields.brand == brand).toList();
+        displayedSneakers =
+            allSneakers.where((s) => s.fields.brand == brand).toList();
       }
     });
   }
@@ -64,9 +66,11 @@ class _SneakerEntryState extends State<SneakerEntry> {
     setState(() {
       selectedSortOption = sortOption;
       if (sortOption == 'Price: Low to High') {
-        displayedSneakers.sort((a, b) => a.fields.price.compareTo(b.fields.price));
+        displayedSneakers
+            .sort((a, b) => a.fields.price.compareTo(b.fields.price));
       } else if (sortOption == 'Price: High to Low') {
-        displayedSneakers.sort((a, b) => b.fields.price.compareTo(a.fields.price));
+        displayedSneakers
+            .sort((a, b) => b.fields.price.compareTo(a.fields.price));
       }
     });
   }
@@ -136,7 +140,8 @@ class _SneakerEntryState extends State<SneakerEntry> {
                   child: GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 8.0,
                       mainAxisSpacing: 8.0,

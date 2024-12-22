@@ -19,7 +19,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    
+    print("=== Flutter LOGIN DART Info ===");
+    print('Login status: ${request.loggedIn}');
+    print('Cookies: ${request.cookies}');
+    print('Headers: ${request.headers}');
+    print("=========================");
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -153,6 +158,12 @@ class _LoginPageState extends State<LoginPage> {
           if (request.loggedIn) {
             String message = response['message'];
             String uname = response['username'];
+            print("=== Flutter build DART Info ===");
+            print('Login status: ${request.loggedIn}');
+            print('Cookies: ${request.cookies}');
+            print('Headers: ${request.headers}');
+            print("=========================");
+
             Navigator.pushReplacementNamed(context, AppRoutes.home);
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
@@ -217,4 +228,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-} 
+}

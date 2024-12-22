@@ -37,6 +37,11 @@ class _SneakerDetailState extends State<SneakerDetail> {
 
   Future<ProductDetails> fetchSneaker(int id) async {
     final request = context.read<CookieRequest>();
+    print("=== Flutter DETAIL DEBUG Info ===");
+    print('Login status: ${request.loggedIn}');
+    print('Cookies: ${request.cookies}');
+    print('Headers: ${request.headers}');
+    print("=========================");
     final response =
         await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
     return ProductDetails.fromJson(response);
