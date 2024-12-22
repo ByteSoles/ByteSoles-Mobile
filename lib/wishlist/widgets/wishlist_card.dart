@@ -22,7 +22,7 @@ class WishlistCard extends StatelessWidget {
       ),
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,49 +32,46 @@ class WishlistCard extends StatelessWidget {
               child: Image.network(
                 wishlist.image,
                 width: double.infinity,
-                height: 150,
+                height: 120,
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             
             // Nama Produk
             Text(
               wishlist.name,
               style: const TextStyle(
                 color: Colors.black,
-                fontSize: 16,
-                fontFamily: 'Montserrat',
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
-              maxLines: 2,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             
             // Brand
             Text(
               wishlist.brand,
               style: const TextStyle(
                 color: Colors.grey,
-                fontSize: 14,
-                fontFamily: 'Montserrat',
+                fontSize: 12,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             
             // Harga
             Text(
               '\$${wishlist.price}',
               style: const TextStyle(
                 color: Colors.black,
-                fontSize: 16,
-                fontFamily: 'Montserrat',
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
             
-            const SizedBox(height: 12),
+            const Spacer(),
             
             // Tombol Hapus
             SizedBox(
@@ -84,7 +81,7 @@ class WishlistCard extends StatelessWidget {
                   final request = context.read<CookieRequest>();
                   try {
                     final response = await request.post(
-                      'http://localhost:8000/wishlist/remove/${wishlist.id}/',
+                      'https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/wishlist/remove/${wishlist.id}/',
                       {
                         'user': request.jsonData['user_id'].toString(),
                         'sneaker': wishlist.id.toString(),
@@ -97,10 +94,7 @@ class WishlistCard extends StatelessWidget {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text(
-                              'Item berhasil dihapus dari wishlist',
-                              style: TextStyle(color: Colors.white),
-                            ),
+                            content: Text('Item berhasil dihapus dari wishlist'),
                             backgroundColor: Colors.black,
                           ),
                         );
@@ -113,11 +107,8 @@ class WishlistCard extends StatelessWidget {
                     if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(
-                          'Gagal menghapus item: $e',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        backgroundColor: Colors.black,
+                        content: Text('Gagal menghapus item: $e'),
+                        backgroundColor: Colors.red,
                       ),
                     );
                   }
@@ -125,14 +116,16 @@ class WishlistCard extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  minimumSize: const Size(double.infinity, 30),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: const Text(
-                  'Hapus dari Wishlist',
+                  'Hapus',
                   style: TextStyle(
-                    fontFamily: 'Montserrat',
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

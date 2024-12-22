@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     
     try {
       final response = await request.get(
-        'http://localhost:8000/user_profile/get_profile/',
+        'https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/user_profile/get_profile/',
       );
 
       if (response != null) {
@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     
     try {
       final response = await request.post(
-        "http://localhost:8000/user_profile/update_profile/",
+        "https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/user_profile/update_profile/",
         {
           'first_name': _editedFields['firstName'],
           'last_name': _editedFields['lastName'],

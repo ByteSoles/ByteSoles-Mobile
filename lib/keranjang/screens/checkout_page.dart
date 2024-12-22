@@ -20,7 +20,7 @@ class _CheckoutSuccessPageState extends State<CheckoutSuccessPage> {
   Future<void> fetchCartItems(CookieRequest request) async {
     try {
       final response =
-          await request.get("http://localhost:8000/keranjang/json/");
+          await request.get("https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/keranjang/json/");
       final List<CartItem> fetchedItems =
           response.map<CartItem>((item) => CartItem.fromJson(item)).toList();
 

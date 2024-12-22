@@ -29,7 +29,7 @@ class _SneakerEntryState extends State<SneakerEntry> {
   }
 
   Future<void> fetchSneakers(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/catalog/view-json/');
+    final response = await request.get('https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/catalog/view-json/');
     List<Sneaker> sneakers = [];
     for (var d in response) {
       if (d != null) {

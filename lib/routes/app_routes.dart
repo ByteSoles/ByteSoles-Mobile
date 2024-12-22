@@ -41,7 +41,7 @@ class AppRoutes {
 
   static const String wishlistScreen = '/wishlist';
   static const String catalog = '/catalog';
-
+  static const String reviewPage = '/review';
   // Route definitions
   // static Map<String, WidgetBuilder> routes = {
   //   initialRoute: (context) => SplashScreen(),

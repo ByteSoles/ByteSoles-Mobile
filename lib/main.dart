@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.keranjangPage: (context) => const KeranjangPage(),
           AppRoutes.checkoutPage: (context) => CheckoutSuccessPage(),
           AppRoutes.wishlistScreen: (context) => const WishlistScreen(),
+          AppRoutes.reviewPage: (context) => const ReviewPage(),
         },
         onGenerateRoute: (settings) {
           if (settings.name == AppRoutes.wishlistScreen) {
@@ -52,11 +53,6 @@ class MyApp extends StatelessWidget {
           }
           return null;
         },
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.brown,
-          ).copyWith(secondary: Colors.brown[400]),
-        ),
-        home: ReviewPage(),
       ),
     );
   }

@@ -34,7 +34,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
   Future<Sneaker> fetchSneaker(int id) async {
     final request = context.read<CookieRequest>();
     final response =
-        await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
+        await request.get('https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/catalog/product_id/$id/');
     return Sneaker.fromJson(response);
   }
 
@@ -49,7 +49,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
     for (var id in recentIds) {
       try {
         final response =
-            await request.get('http://127.0.0.1:8000/catalog/product_id/$id/');
+            await request.get('https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/catalog/product_id/$id/');
         sneakers.add(Sneaker.fromJson(response));
       } catch (e) {
         print('Error fetching sneaker $id: $e');
@@ -243,7 +243,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
                                     'Sending data - User ID: ${request.jsonData['user_id']}, Sneaker ID: ${widget.sneakerId}');
 
                                 final response = await request.post(
-                                  "http://localhost:8000/keranjang/add-to-cart-flutter/",
+                                  "https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/keranjang/add-to-cart-flutter/",
                                   {
                                     'user':
                                         request.jsonData['user_id'].toString(),
@@ -313,7 +313,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
 
                               try {
                                 final response = await request.post(
-                                  "http://localhost:8000/wishlist/add-to-wishlist-flutter/",
+                                  "https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/wishlist/add-to-wishlist-flutter/",
                                   {
                                     'user': request.jsonData['user_id'].toString(),
                                     'sneaker': widget.sneakerId.toString(),
@@ -378,7 +378,7 @@ class _SneakerDetailState extends State<SneakerDetail> {
 
                               if (request.loggedIn) {
                                 Navigator.pushNamed(
-                                    context, AppRoutes.keranjangPage);
+                                    context, AppRoutes.reviewPage);
                               } else {
                                 _showLoginPopup(context);
                               }

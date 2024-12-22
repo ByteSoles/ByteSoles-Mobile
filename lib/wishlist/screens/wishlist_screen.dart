@@ -175,7 +175,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   Future<List<Wishlist>> fetchWishlist() async {
     final request = context.read<CookieRequest>();
     try {
-      final response = await request.get('http://localhost:8000/wishlist/json/');
+      final response = await request.get('https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/wishlist/json/');
       List<Wishlist> wishlistItems = [];
       
       for (var item in response) {

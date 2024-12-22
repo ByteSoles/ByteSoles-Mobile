@@ -45,9 +45,9 @@ class _KeranjangPageState extends State<KeranjangPage> {
 
     try {
       final responseCartItem =
-          await request.get("http://localhost:8000/keranjang/json/");
+          await request.get("https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/keranjang/json/");
       final responseUserCart =
-          await request.get("http://localhost:8000/keranjang/get-user-cart/");
+          await request.get("https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/keranjang/get-user-cart/");
 
       for (var d in responseCartItem) {
         if (d != null) {

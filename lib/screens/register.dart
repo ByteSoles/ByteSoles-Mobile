@@ -182,7 +182,7 @@ class _RegisterPageState extends State<RegisterPage> {
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
           final response = await request.postJson(
-            "http://localhost:8000/authentication/register/",
+            "https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/authentication/register/",
             jsonEncode({
               "username": _usernameController.text,
               "password1": _passwordController.text,

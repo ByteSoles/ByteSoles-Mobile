@@ -19,7 +19,7 @@ class CartItemCard extends StatelessWidget {
     final request = context.read<CookieRequest>();
     try {
       final response = await request.post(
-        "http://localhost:8000/keranjang/update-quantity-ajax/",
+        "https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/keranjang/update-quantity-ajax/",
         {
           'sneaker': item.fields.sneaker.toString(),
           'quantity': newQuantity.toString(),
@@ -147,7 +147,7 @@ class CartItemCard extends StatelessWidget {
                       final request = context.read<CookieRequest>();
                       try {
                         final response = await request.post(
-                          "http://localhost:8000/keranjang/remove-from-cart-ajax/",
+                          "https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/keranjang/remove-from-cart-ajax/",
                           {'sneaker': item.fields.sneaker.toString()},
                         );
 

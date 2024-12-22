@@ -69,7 +69,7 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
       final request = context.read<CookieRequest>();
       try {
         final response = await request.post(
-          'http://localhost:8000/user_profile/delete_account/',
+          'https://daffa-aqil31-bytesoles.pbp.cs.ui.ac.id/user_profile/delete_account/',
           {},
         );
         if (response['status'] == 'success') {
