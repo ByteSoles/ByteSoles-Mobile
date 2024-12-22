@@ -43,19 +43,25 @@ class _ReviewListState extends State<ReviewList> {
       future: fetchReviews(request),
       builder: (context, AsyncSnapshot reviewsSnapshot) {
         if (reviewsSnapshot.data == null) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator()
           );
         } else {
-          if (!reviewsSnapshot.hasData) {
-            return const Column(
-              children: [
-                Text(
-                  'No Rewiew yet.',
-                  style: TextStyle(fontSize: 20, color: Colors.grey),
-                ),
-                SizedBox(height: 8),
-              ],
+          if (!reviewsSnapshot.hasData || reviewsSnapshot.data == null || reviewsSnapshot.data.length == 0) {
+            return Container(
+              height: 400,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'No Review yet.',
+                    style: TextStyle(
+                    fontSize: 16, 
+                    color: Colors.grey),
+                  )
+                ]
+              ),
             );
           } else {
             return StaggeredGrid.count(
@@ -63,9 +69,8 @@ class _ReviewListState extends State<ReviewList> {
               crossAxisSpacing: 15,
               mainAxisSpacing: 13,
               children: [
-                for (int i = 0; i < reviewsSnapshot.data.length; i++) 
-                  if (reviewsSnapshot.data[i].fields.username != widget.username)
-                    ReviewCard(reviewsSnapshot: reviewsSnapshot, index: i),
+                for (int i = 0; i < reviewsSnapshot.data.length; i++)
+                  ReviewCard(reviewsSnapshot: reviewsSnapshot, index: i),
               ],
             );
           }

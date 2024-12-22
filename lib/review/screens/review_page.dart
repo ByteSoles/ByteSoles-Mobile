@@ -20,15 +20,16 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage> {
   String? username;
+  int? userId;
 
   @override
   void initState() {
     super.initState();
     final request = context.read<CookieRequest>();
     if (request.loggedIn) {
-      print('Fetching username');
       setState(() {
         username = request.jsonData['username'];
+        userId = request.jsonData['user_id'];
       });
     }
   }
@@ -94,6 +95,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           sneaker: sneaker,
                           rating: ratingSnapshot.data.toString(),
                           username: username,
+                          userId: userId,
                         );
                       }
                     }

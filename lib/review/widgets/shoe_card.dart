@@ -12,14 +12,15 @@ class ShoeCard extends StatelessWidget {
   final Sneaker sneaker;
   final String rating;
   final String? username;
+  final int? userId;
 
-  const ShoeCard({Key? key, required this.sneaker, required this.rating, required this.username}) : super(key: key);
+  const ShoeCard({Key? key, required this.sneaker, required this.rating, required this.username, required this.userId}) : super(key: key);
 
   Future<List<ReviewEntry>> getUserReview(CookieRequest request, String? username, int sneakerId) async {
     if (username == null) {
       return [];
     }
-    final response = await request.get('http://127.0.0.1:8000/review/score/$sneakerId/$username/');
+    final response = await request.get('http://127.0.0.1:8000/review/$sneakerId/$username/');
     var data = response;
 
     List<ReviewEntry> review = [];
@@ -108,49 +109,84 @@ class ShoeCard extends StatelessWidget {
                     FutureBuilder(
                       future: getUserReview(request, username, sneaker.pk),
                       builder: (context, AsyncSnapshot reviewSnapshot) {
-                        if (reviewSnapshot.hasData) {
-                          print('test');
+                        if (reviewSnapshot.hasData && reviewSnapshot.data != null && reviewSnapshot.data.isNotEmpty) {
                           score = reviewSnapshot.data[0].fields.score;
                         }
-                        return username != null ?  Container(
-                        width: screenWidth >= 1200 ? screenWidth * 0.25 : screenWidth > 1000 ? 1000 * 0.3 : screenWidth * 0.3,
-                        height: 40,
-                        child: !reviewSnapshot.hasData ? ElevatedButton(
-                          onPressed: () => addReview(context, score, sneaker),
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            backgroundColor: Colors.black,
-                          ),
-                          child: Text(
-                            "Add Review",
-                            style: TextStyle(
-                              fontSize: screenWidth > 800 ? 17 : 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          )
-                        )
-                        :
-                        Text(
-                          "We appreciate your review",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      )
-                      :
-                      Text(
-                        'Take a moment to look around and see what others think about this sneaker. Reading their reviews can help you make the perfect choice! (Login to give your own review)',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
-                        textAlign: TextAlign.center,
-                      );
+                        return username != null 
+                          ? Container(
+                              width: screenWidth >= 1200 ? screenWidth * 0.25 : screenWidth > 1000 ? 1000 * 0.3 : screenWidth * 0.3,
+                              height: 40,
+                              child: (!reviewSnapshot.hasData || reviewSnapshot.data == null || reviewSnapshot.data.isEmpty)
+                                ? ElevatedButton(
+                                    onPressed: () => addReview(context, score, sneaker, username!, userId!),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      backgroundColor: Colors.black,
+                                    ),
+                                    child: Text(
+                                      "Add Review",
+                                      style: TextStyle(
+                                        fontSize: screenWidth > 800 ? 17 : 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  )
+                                : ElevatedButton(
+                                    onPressed: () async {
+                                      try {
+                                        final request = context.read<CookieRequest>();
+                                        final response = await request.post(
+                                          "http://localhost:8000/review/delete-review-flutter/",
+                                          {
+                                            'user_id': userId.toString(),
+                                            'sneaker_id': sneaker.pk.toString(),
+                                          },
+                                        );
+
+                                        if (response['status'] == 'success') {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => ReviewPage(sneaker: sneaker)),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(response['message'] ?? 'Failed to delete review'))
+                                          );
+                                        }
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Error: $e'))
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    child: Text(
+                                      "Delete Review",
+                                      style: TextStyle(
+                                        fontSize: screenWidth > 800 ? 17 : 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  )
+                            )
+                          : 
+                          Text(
+                              screenWidth > 800 ? 'Take a moment to look around and see what others think about this sneaker. Reading their reviews can help you make the perfect choice! (Login to leave your own review)' :  'Login to leave your own review',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.center,
+                            );
                       }
                     )
                   ],
