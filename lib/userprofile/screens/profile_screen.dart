@@ -130,10 +130,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              const CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/images/profile.png'),
-              ),
+              // const CircleAvatar(
+              //   radius: 50,
+              //   backgroundImage: AssetImage('assets/images/profile.png'),
+              // ),
               const SizedBox(height: 20),
               ProfileFormWidget(
                 profile: _profile,

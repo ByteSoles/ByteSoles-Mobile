@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:bytesoles/userprofile/models/profile_model.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -31,7 +29,6 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
   late TextEditingController emailController;
   late TextEditingController shoeSizeController;
   late TextEditingController addressController;
-  File? _imageFile;
 
   @override
   void initState() {
@@ -46,18 +43,7 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
     shoeSizeController = TextEditingController(
       text: widget.profile.shoeSize?.toString() ?? '',
     );
-    addressController = TextEditingController(text: widget.profile.shippingAddress ?? '');
-  }
-
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    
-    if (image != null) {
-      setState(() {
-        _imageFile = File(image.path);
-      });
-    }
+    // addressController = TextEditingController(text: widget.profile.shippingAddress ?? '');
   }
 
   Future<void> _deleteAccount() async {
@@ -104,15 +90,17 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: widget.isEditing ? _pickImage : null,
-          child: CircleAvatar(
-            radius: 50,
-            backgroundImage: _imageFile != null
-                ? FileImage(_imageFile!)
-                : (widget.profile.profilePicture != null
-                    ? NetworkImage(widget.profile.profilePicture!)
-                    : AssetImage('assets/images/profile.png') as ImageProvider),
+        Container(
+          width: 150,
+          height: 150,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.black, width: 1),
+          ),
+          child: const Icon(
+            Icons.person,
+            color: Colors.black,
+            size: 80,
           ),
         ),
         const SizedBox(height: 20),
@@ -139,77 +127,74 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
             (value) => widget.onFieldChanged('shoeSize', value),
             keyboardType: TextInputType.number,
           ),
-          _buildTextField(
-            "Shipping Address",
-            addressController,
-            (value) => widget.onFieldChanged('shippingAddress', value),
-          ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () async {
-              final request = context.read<CookieRequest>();
-              try {
-                // Persiapkan data yang akan dikirim
-                final data = {
-                  'first_name': firstNameController.text.isEmpty ? '-' : firstNameController.text,
-                  'last_name': lastNameController.text.isEmpty ? '-' : lastNameController.text,
-                  'email': emailController.text.isEmpty ? '-' : emailController.text,
-                  'shoe_size': shoeSizeController.text.isEmpty ? '-' : shoeSizeController.text,
-                  'shipping_address': addressController.text.isEmpty ? '-' : addressController.text,
-                };
-                
-                // Kirim data ke server
-                final response = await request.post(
-                  'http://localhost:8000/user_profile/update_profile/',
-                  data,
-                );
-                
-                if (response['status'] == 'success') {
-                  widget.onSave();
-                }
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Gagal memperbarui profil: ${e.toString()}')),
-                );
-              }
-            },
-            child: Text('Save'),
+            onPressed: widget.onSave,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Save'),
           ),
+          const SizedBox(height: 16),
           TextButton(
             onPressed: widget.onCancel,
-            child: Text('Cancel'),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Cancel'),
           ),
         ] else ...[
           _buildInfoRow("First Name", widget.profile.firstName),
           _buildInfoRow("Last Name", widget.profile.lastName),
           _buildInfoRow("Email", widget.profile.email),
           _buildInfoRow("Shoe Size", widget.profile.shoeSize?.toString() ?? '-'),
-          _buildInfoRow("Shipping Address", widget.profile.shippingAddress ?? '-'),
+          // _buildInfoRow("Shipping Address", widget.profile.shippingAddress ?? '-'),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () async {
+            onPressed: () {
               final request = context.read<CookieRequest>();
-              final response = await request.logout(
-                'http://localhost:8000/authentication/logout/'
+              // Langsung set loggedIn ke false dan clear data
+              request.loggedIn = false;
+              request.jsonData = {};
+              // Redirect ke homepage dan clear semua route sebelumnya
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/home',
+                (route) => false,
               );
-              if (response['status'] == 'success') {
-                Navigator.pushReplacementNamed(context, '/login');
-              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              minimumSize: Size(double.infinity, 50),
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            child: Text('Logout'),
+            child: const Text('Logout'),
           ),
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: _deleteAccount,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.grey,
-              minimumSize: Size(double.infinity, 50),
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            child: Text('Delete Account'),
+            child: const Text('Delete Account'),
           ),
         ],
       ],

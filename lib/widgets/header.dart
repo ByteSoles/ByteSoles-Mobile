@@ -1,5 +1,7 @@
 import 'package:bytesoles/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
 
 class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onMenuPressed;
@@ -12,6 +14,72 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
     this.onLoginPressed,
     this.isLoggedIn = false,
   });
+
+  void _handleWishlistNavigation(BuildContext context) {
+    final request = context.read<CookieRequest>();
+    if (request.loggedIn) {
+      Navigator.pushNamed(context, AppRoutes.wishlistScreen);
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Login Required'),
+            content: const Text('Please login to access your wishlist'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, AppRoutes.login);
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                ),
+                child: const Text('Login'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void _handleCartNavigation(BuildContext context) {
+    final request = context.read<CookieRequest>();
+    if (request.loggedIn) {
+      Navigator.pushNamed(context, AppRoutes.keranjangPage);
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Login Required'),
+            content: const Text('Please login to access your cart'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, AppRoutes.login);
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                ),
+                child: const Text('Login'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,39 +105,32 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 16),
-          child: isLoggedIn
-              ? InkWell(
-                  onTap: onLoginPressed,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
-                      'assets/images/profile.png',
-                      height: 40,
-                      width: 40,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
-              : TextButton(
-                  onPressed: onLoginPressed,
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  ),
-                  child: const Text(
-                    'Login/Register',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
+          child: InkWell(
+            onTap: () {
+              if (isLoggedIn) {
+                Navigator.pushNamed(context, '/profile');
+              } else {
+                Navigator.pushNamed(context, '/login');
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.black, width: 1),
+              ),
+              child: const Icon(
+                Icons.person,
+                color: Colors.black,
+                size: 24,
+              ),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  /// Button Menu untuk menampilkan daftar menu
   Widget _buildMenuButton(BuildContext context) {
     return PopupMenuButton<String>(
       icon: const Icon(Icons.menu, color: Colors.black),
@@ -83,17 +144,13 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
             Navigator.pushNamed(context, AppRoutes.home);
             break;
           case 'Wishlist':
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Wishlist page coming soon!')),
-            );
+            _handleWishlistNavigation(context);
             break;
           case 'Buy More':
             Navigator.pushNamed(context, AppRoutes.catalogProductsScreen);
             break;
           case 'List Cart':
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Cart page coming soon!')),
-            );
+            _handleCartNavigation(context);
             break;
         }
       },

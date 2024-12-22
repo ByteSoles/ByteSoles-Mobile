@@ -100,6 +100,7 @@ class _KeranjangPageState extends State<KeranjangPage> {
             fontSize: 20,
             fontWeight: FontWeight.w500,
           ),
+
         ),
         centerTitle: true, // Untuk memposisikan judul di tengah seperti di gambar
         backgroundColor: Colors.white, // Sesuai dengan desain yang light
@@ -118,3 +119,4 @@ class _KeranjangPageState extends State<KeranjangPage> {
     );
   }
 }
+
