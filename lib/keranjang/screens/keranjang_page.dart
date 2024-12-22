@@ -35,10 +35,10 @@ class _KeranjangPageState extends State<KeranjangPage> {
   Future<void> refreshCartItems(CookieRequest request) async {
     List<CartItem> listCart = [];
     UserCart cart = UserCart(
-      model: '', // Nilai default
-      pk: 0, // Nilai default
+      model: '', 
+      pk: 0, 
       fields: UserCartModel.Fields(
-          user: 0, totalItems: 0, totalPrice: 0), // Menggunakan alias
+          user: 0, totalItems: 0, totalPrice: 0), 
     );
 
     setState(() => isLoading = true);
@@ -49,24 +49,21 @@ class _KeranjangPageState extends State<KeranjangPage> {
       final responseUserCart =
           await request.get("http://localhost:8000/keranjang/get-user-cart/");
 
-      // Parsing cart item data
       for (var d in responseCartItem) {
         if (d != null) {
           listCart.add(CartItem.fromJson(d));
         }
       }
 
-      // Parsing user cart data dengan UserCart.fromJson
       for (var d in responseUserCart) {
         if (d != null) {
-          cart = UserCart.fromJson(
-              d); // Memastikan data diubah menjadi objek UserCart
+          cart = UserCart.fromJson(d); 
         }
       }
 
       setState(() {
         cartItems = listCart;
-        userCart = cart; // Setelah data diparsing, set userCart
+        userCart = cart;
         isLoading = false;
       });
     } catch (e) {
@@ -80,7 +77,6 @@ class _KeranjangPageState extends State<KeranjangPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    // refreshCartItems(request);
     if (isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -102,18 +98,18 @@ class _KeranjangPageState extends State<KeranjangPage> {
           ),
 
         ),
-        centerTitle: true, // Untuk memposisikan judul di tengah seperti di gambar
-        backgroundColor: Colors.white, // Sesuai dengan desain yang light
-        elevation: 0, // Menghilangkan shadow
-        iconTheme: const IconThemeData(color: Colors.black), // Warna icon back button
-        titleTextStyle: const TextStyle(color: Colors.black), // Warna text judul
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255), 
+        elevation: 0, 
+        iconTheme: const IconThemeData(color: Colors.black), 
+        titleTextStyle: const TextStyle(color: Colors.black), 
       ),
       body: cartItems.isEmpty
           ? const EmptyCart()
           : CartList(
               cartItems: cartItems,
               userCart: userCart!,
-              onRefresh: () => refreshCartItems(request), // Referensi fungsi
+              onRefresh: () => refreshCartItems(request), 
               itemAdded: itemAdded,
             ),
     );

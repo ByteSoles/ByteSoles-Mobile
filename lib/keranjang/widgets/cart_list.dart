@@ -44,7 +44,7 @@ class CartList extends StatelessWidget {
               itemBuilder: (context, index) => CartItemCard(
                 item: cartItems[index],
                 onRefresh:
-                    onRefresh, // Berikan referensi fungsi onRefresh tanpa tanda kurung
+                    onRefresh, 
               ),
             ),
             OrderSummary(userCart: userCart),

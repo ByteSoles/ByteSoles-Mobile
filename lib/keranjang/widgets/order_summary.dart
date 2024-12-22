@@ -21,7 +21,7 @@ class _OrderSummaryState extends State<OrderSummary> {
   @override
   void initState() {
     super.initState();
-    userCart = widget.userCart; // Initialize with the passed userCart
+    userCart = widget.userCart; 
   }
 
   @override
@@ -159,13 +159,7 @@ class _OrderSummaryState extends State<OrderSummary> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // Pindah ke route checkoutPage
                 Navigator.pushNamed(context, AppRoutes.checkoutPage);
-
-                // Menampilkan snackbar
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Cart page coming soon!')),
-                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,

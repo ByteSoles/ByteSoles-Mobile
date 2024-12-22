@@ -14,7 +14,7 @@ class CartItemCard extends StatelessWidget {
   }) : super(key: key);
 
   Future<void> updateQuantity(BuildContext context, int newQuantity) async {
-    if (newQuantity < 1) return; // Prevent negative quantities
+    if (newQuantity < 1) return; 
     
     final request = context.read<CookieRequest>();
     try {
@@ -27,11 +27,11 @@ class CartItemCard extends StatelessWidget {
       );
 
       if (response['status'] == 'success') {
-        onRefresh(); // Refresh cart data
+        onRefresh(); 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Jumlah berhasil diperbarui',
+              'Quantity successfully updated',
               style: TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.black,
@@ -56,7 +56,6 @@ class CartItemCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            // Gambar Produk
             Image.network(
               item.fields.sneakerImage,
               width: 100,
@@ -64,8 +63,6 @@ class CartItemCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
             const SizedBox(width: 16),
-            
-            // Informasi Produk
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,11 +82,8 @@ class CartItemCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
-                  // Quantity Controls
                   Row(
                     children: [
-                      // Tombol Kurang
                       IconButton(
                         icon: const Icon(Icons.remove_circle_outline),
                         onPressed: () => updateQuantity(
@@ -98,7 +92,6 @@ class CartItemCard extends StatelessWidget {
                         ),
                       ),
                       
-                      // Tampilan Quantity
                       Text(
                         '${item.fields.quantity}',
                         style: const TextStyle(
@@ -106,8 +99,6 @@ class CartItemCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      
-                      // Tombol Tambah
                       IconButton(
                         icon: const Icon(Icons.add_circle_outline),
                         onPressed: () => updateQuantity(
@@ -120,8 +111,6 @@ class CartItemCard extends StatelessWidget {
                 ],
               ),
             ),
-            
-            // Total Harga dan Tombol Hapus
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -139,16 +128,16 @@ class CartItemCard extends StatelessWidget {
                     bool? confirm = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Hapus Item'),
-                        content: const Text('Apakah Anda yakin ingin menghapus item ini?'),
+                        title: const Text('Remove Item'),
+                        content: const Text('Are you sure you want to remove this item?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
-                            child: const Text('Batal'),
+                            child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: () => Navigator.pop(context, true),
-                            child: const Text('Hapus'),
+                            child: const Text('Remove'),
                           ),
                         ],
                       ),
@@ -168,7 +157,7 @@ class CartItemCard extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                'Item berhasil dihapus',
+                                'Item successfully removed',
                                 style: TextStyle(color: Colors.white),
                               ),
                               backgroundColor: Colors.black,

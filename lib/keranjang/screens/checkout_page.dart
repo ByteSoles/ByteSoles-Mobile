@@ -189,10 +189,21 @@ class _CheckoutSuccessPageState extends State<CheckoutSuccessPage> {
     return ElevatedButton(
       onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.home),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
+        backgroundColor: const Color.fromARGB(255, 65, 191, 90),
+        foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        elevation: 0,
       ),
-      child: const Text('Return to Homepage'),
+      child: const Text(
+        'Return to Homepage',
+        style: TextStyle(
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 }
