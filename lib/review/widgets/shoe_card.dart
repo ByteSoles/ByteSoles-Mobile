@@ -1,11 +1,41 @@
+import 'package:bytesoles/catalog/models/sneaker.dart';
+import 'package:bytesoles/review/models/review_entry.dart';
+import 'package:bytesoles/review/screens/review_page.dart';
+import 'package:bytesoles/review/widgets/review_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class ShoeCard extends StatelessWidget {
-  const ShoeCard({Key? key}) : super(key: key);
+  final Sneaker sneaker;
+  final String rating;
+  final String? username;
+
+  const ShoeCard({Key? key, required this.sneaker, required this.rating, required this.username}) : super(key: key);
+
+  Future<List<ReviewEntry>> getUserReview(CookieRequest request, String? username, int sneakerId) async {
+    if (username == null) {
+      return [];
+    }
+    final response = await request.get('http://127.0.0.1:8000/review/score/$sneakerId/$username/');
+    var data = response;
+
+    List<ReviewEntry> review = [];
+    for (var d in data) {
+      if (d != null) {
+        review.add(ReviewEntry.fromJson(d));
+      }
+    }
+    return review;
+  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    final request = context.watch<CookieRequest>();
+    int score = 5;
 
     return Card(
       elevation: 4,
@@ -32,7 +62,7 @@ class ShoeCard extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.network(
-                        "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2023/2/10/30bae113-9ecb-48af-a313-a4736248a3f7.jpg",
+                        sneaker.fields.image,
                         fit: BoxFit.fill,
                         width: screenWidth > 900 ? 900 * 0.25 : screenWidth * 0.25,
                       )
@@ -41,7 +71,7 @@ class ShoeCard extends StatelessWidget {
                     Container(
                       width: screenWidth >= 1200 ? screenWidth * 0.18 : screenWidth * 0.33,
                       child: Text(
-                        "Nike Dunk Low Retro White Black Panda (2021) (Women's)",
+                        sneaker.fields.name,
                         style: TextStyle(
                           fontSize: screenWidth > 800 ? 19 : 17,
                           fontWeight: FontWeight.bold,
@@ -67,7 +97,7 @@ class ShoeCard extends StatelessWidget {
                         ),
                         SizedBox(width: screenWidth * 0.004),
                         Text(
-                          "4.5",
+                          rating,
                           style: TextStyle(
                             fontSize: screenWidth >= 1200 ? 24 : screenWidth > 800 ? 22 : 18,
                           ),
@@ -75,36 +105,54 @@ class ShoeCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: screenWidth * 0.015),
-                    Container(
-                      width: screenWidth >= 1200 ? screenWidth * 0.25 : screenWidth > 1000 ? 1000 * 0.3 : screenWidth * 0.3,
-                      height: 40,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                    FutureBuilder(
+                      future: getUserReview(request, username, sneaker.pk),
+                      builder: (context, AsyncSnapshot reviewSnapshot) {
+                        if (reviewSnapshot.hasData) {
+                          print('test');
+                          score = reviewSnapshot.data[0].fields.score;
+                        }
+                        return username != null ?  Container(
+                        width: screenWidth >= 1200 ? screenWidth * 0.25 : screenWidth > 1000 ? 1000 * 0.3 : screenWidth * 0.3,
+                        height: 40,
+                        child: !reviewSnapshot.hasData ? ElevatedButton(
+                          onPressed: () => addReview(context, score, sneaker),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            backgroundColor: Colors.black,
                           ),
-                          backgroundColor: Colors.black,
-                        ),
-                        child: Text(
-                          "Add Review",
-                          style: TextStyle(
-                            fontSize: screenWidth > 800 ? 17 : 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                          child: Text(
+                            "Add Review",
+                            style: TextStyle(
+                              fontSize: screenWidth > 800 ? 17 : 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          )
                         )
+                        :
+                        Text(
+                          "We appreciate your review",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       )
-                    ),
-                    SizedBox(height: 10),
-                    if (screenWidth > 790)
+                      :
                       Text(
-                        "We appreciate your review!",
+                        'Take a moment to look around and see what others think about this sneaker. Reading their reviews can help you make the perfect choice! (Login to give your own review)',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
                         ),
-                      )
+                        textAlign: TextAlign.center,
+                      );
+                      }
+                    )
                   ],
                 )
               ),

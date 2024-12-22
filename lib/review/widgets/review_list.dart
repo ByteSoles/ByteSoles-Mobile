@@ -6,15 +6,16 @@ import 'package:provider/provider.dart';
 
 class ReviewList extends StatefulWidget {
   final String slug;
+  final String? username;
 
-  const ReviewList(this.slug);
+  const ReviewList({Key? key, required this.slug, required this.username}) : super(key: key);
 
   @override
   State<ReviewList> createState() => _ReviewListState();
 }
 
 class _ReviewListState extends State<ReviewList> {
-  Future<List<ReviewEntry>> fetchMood(CookieRequest request) async {
+  Future<List<ReviewEntry>> fetchReviews(CookieRequest request) async {
     final reviews = await request.get('http://127.0.0.1:8000/review/json/${widget.slug}/');
     var data = reviews;
     
@@ -27,20 +28,26 @@ class _ReviewListState extends State<ReviewList> {
     return listReview;
   }
 
+  void refreshReviews() {
+    setState(() {
+      // Trigger a rebuild of the FutureBuilder to fetch the latest reviews
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     final request = context.watch<CookieRequest>();
 
     return FutureBuilder(
-      future: fetchMood(request),
-      builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.data == null) {
+      future: fetchReviews(request),
+      builder: (context, AsyncSnapshot reviewsSnapshot) {
+        if (reviewsSnapshot.data == null) {
           return const Center(
             child: CircularProgressIndicator()
           );
         } else {
-          if (!snapshot.hasData) {
+          if (!reviewsSnapshot.hasData) {
             return const Column(
               children: [
                 Text(
@@ -56,8 +63,9 @@ class _ReviewListState extends State<ReviewList> {
               crossAxisSpacing: 15,
               mainAxisSpacing: 13,
               children: [
-                for (int i = 0; i < snapshot.data.length; i++)
-                  ReviewCard(snapshot, i),
+                for (int i = 0; i < reviewsSnapshot.data.length; i++) 
+                  if (reviewsSnapshot.data[i].fields.username != widget.username)
+                    ReviewCard(reviewsSnapshot: reviewsSnapshot, index: i),
               ],
             );
           }
@@ -68,17 +76,17 @@ class _ReviewListState extends State<ReviewList> {
 }
 
 class ReviewCard extends StatelessWidget {
-  final AsyncSnapshot snapshot;
+  final AsyncSnapshot reviewsSnapshot;
   final int index;
 
-  const ReviewCard(this.snapshot, this.index); 
+  const ReviewCard({Key? key, required this.reviewsSnapshot, required this.index}) : super(key: key); 
 
   @override
   Widget build(BuildContext context) {
-    int rating = snapshot.data![index].fields.score;
-    String username = snapshot.data![index].fields.username;
-    String reviewDescription = snapshot.data![index].fields.reviewDescription;
-    String date = snapshot.data![index].fields.date.toString().substring(0, 10);
+    int rating = reviewsSnapshot.data![index].fields.score;
+    String username = reviewsSnapshot.data![index].fields.username;
+    String reviewDescription = reviewsSnapshot.data![index].fields.reviewDescription;
+    String date = reviewsSnapshot.data![index].fields.date.toString().substring(0, 10);
 
     return Card(
       elevation: 4,
