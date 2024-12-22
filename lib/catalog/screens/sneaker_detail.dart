@@ -1,4 +1,6 @@
+import 'package:bytesoles/review/widgets/review_list.dart';
 import 'package:bytesoles/routes/app_routes.dart';
+import 'package:bytesoles/userprofile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -123,7 +125,14 @@ class _SneakerDetailState extends State<SneakerDetail> {
         isLoggedIn: context.read<CookieRequest>().loggedIn,
         onMenuPressed: () => Scaffold.of(context).openDrawer(),
         onLoginPressed: () {
-          Navigator.pushNamed(context, '/login');
+          if (context.read<CookieRequest>().loggedIn) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            } else {
+              Navigator.pushNamed(context, AppRoutes.login);
+            }
         },
       ),
       body: SingleChildScrollView(
@@ -374,14 +383,11 @@ class _SneakerDetailState extends State<SneakerDetail> {
                           // Reviews Button
                           ElevatedButton.icon(
                             onPressed: () {
-                              final request = context.read<CookieRequest>();
-
-                              if (request.loggedIn) {
-                                Navigator.pushNamed(
-                                    context, AppRoutes.reviewPage);
-                              } else {
-                                _showLoginPopup(context);
-                              }
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.reviewPage,
+                                arguments: sneaker,
+                              );
                             },
                             icon: const Icon(Icons.rate_review),
                             label: const Text('Reviews'),

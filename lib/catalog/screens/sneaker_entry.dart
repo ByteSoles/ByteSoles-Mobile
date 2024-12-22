@@ -1,3 +1,5 @@
+import 'package:bytesoles/routes/app_routes.dart';
+import 'package:bytesoles/userprofile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bytesoles/catalog/models/sneaker.dart';
@@ -78,7 +80,14 @@ class _SneakerEntryState extends State<SneakerEntry> {
         isLoggedIn: context.read<CookieRequest>().loggedIn,
         onMenuPressed: () => Scaffold.of(context).openDrawer(),
         onLoginPressed: () {
-          Navigator.pushNamed(context, '/login');
+          if (context.read<CookieRequest>().loggedIn) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            } else {
+              Navigator.pushNamed(context, AppRoutes.login);
+            }
         },
       ),
       body: ListView(
