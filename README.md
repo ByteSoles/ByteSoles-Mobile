@@ -104,3 +104,7 @@ Login User     | Login User dapat menambahkan detail profil mereka
 
 ### LINK DESAIN MOBILE APP 
 https://www.figma.com/design/sgLjXBVX3kB6RvRWW7lSgg/eCommerce-App-UI-Kit---Case-Study-Ecommerce-Mobile-App-UI-kit-(Community)?node-id=1-16990&t=v7Xr1pUFSLMqolre-1
+
+
+### LINK VIDIO
+ristek.link/DEMOTKPBPC13
